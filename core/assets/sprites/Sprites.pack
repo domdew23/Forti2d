@@ -1,0 +1,66 @@
+
+Sprites.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+explosion
+  rotate: false
+  xy: 1, 1
+  size: 900, 900
+  orig: 900, 900
+  offset: 0, 0
+  index: -1
+bullet
+  rotate: false
+  xy: 903, 544
+  size: 100, 357
+  orig: 100, 357
+  offset: 0, 0
+  index: -1
+
+Sprites2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+firstboss
+  rotate: false
+  xy: 1, 517
+  size: 550, 376
+  orig: 550, 376
+  offset: 0, 0
+  index: -1
+secondboss
+  rotate: false
+  xy: 1, 259
+  size: 616, 256
+  orig: 616, 256
+  offset: 0, 0
+  index: -1
+character
+  rotate: false
+  xy: 1, 10
+  size: 398, 247
+  orig: 398, 247
+  offset: 0, 0
+  index: -1
+gunTiers
+  rotate: false
+  xy: 553, 637
+  size: 384, 256
+  orig: 384, 256
+  offset: 0, 0
+  index: -1
+sheild
+  rotate: false
+  xy: 401, 1
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+health
+  rotate: false
+  xy: 619, 485
+  size: 170, 150
+  orig: 170, 150
+  offset: 0, 0
+  index: -1

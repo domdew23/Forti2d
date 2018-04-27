@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="240" height="24" tilewidth="16" tileheight="16" infinite="0" nextobjectid="30">
+ <tileset firstgid="1" source="NES - Super Mario Bros - Tileset.tsx"/>
+ <tileset firstgid="925" source="hyptosis_tile-art-batch-1.tsx"/>
+ <tileset firstgid="4525" source="obj_misk_atlas.tsx"/>
+ <layer name="Background" width="240" height="24">
+  <data encoding="base64" compression="zlib">
+   eJzt0zEKgCAUgGGXGrtIJ6hjBB0lz1+uIhUSFvQNH89F3qD/2Icw8ntTF8L8oOmmOZst1O5K995+JyjZjr8ZH7TdFLPZQu2uqF8AAAAAAAAAAAAAAAAAAABetAzlM+fWoXyGVlKveb8avpZ6zfvVMK3pt45++QL91tEvAHzXDt9+bRU=
+  </data>
+ </layer>
+ <layer name="In Ground" width="240" height="24">
+  <data encoding="base64" compression="zlib">
+   eJztm1mMU2UYhj/NdNqZztDhQkBBEZR9DYqsNzIDKnADCaggKKsIKALDcqOsgpAA3hhAZRFl31cBZQ+ToNwA3rAvicqqsoR9e5qePz3Aoe2Unmk7fE/y5O+055z+/f7vPSdnpiOiKIqiKIqiKIqiKIqiKCEm+UQm+5I9C0VR4mE32S3S/CpKWvJMlsizWcmehaIoxeGvgMjf+A+exjN4NpDsWSlKiMZ+kTewCTbFZtgcW2BLf7JnpyhKJAaT0SE4FAtxGA7HEThS86soKc1yMroCV+IqXI1rcC2u0/wqSkpzhoyexXN4Hi/gv/gf/v8U5be497kleV88pYzIVPRyfJ/eeys2quWIVMcaWBNrYW2sg3Vzkj07Jcgesvs75pPdAs2vYqMHGe2JvbA39sG++DH20/ymBCa/o8juaM2vYmMWGZ2Nc3Au/ojz8Cf8WfObEpj8/kp2f9P8JhRzb+KhrplpWNuDZPQQHsYjeBSP4XE8UQrz6/Z9qxvHN/lVEo+p7ZusUas0zO9zuSLlsDxWwOfxBayIlXKTPTtFcReT3y/I7pdpmN8OZLQjTsNvsBN2xnfxPc2vUsox+d1EdjenYX4Nf5DVvS7kdbtfZAfuxF1p/veoi3kil/AyXslz971KU93cZF+WyH48gH/G+P30oeS00Mpqqn8/tk5udIN4OQf54rjHstfCidv03h28i/dKsA+jrUu0eTtRr6xIfWyADcsmZj6ts0Xa4Fv4dnZ4+2TVLR2o4hGp6gk9zqVmZTCAedmR9zOspO6rrLWvwnm4Kr6Cr2I1rO7yuTkaY7wiY72hxyaf0cZ8slsQR37ttXCiaY5IM2yOLRL0+7BJmSKTM5/sGNHm7cQnZLY/DsCBEfJbnGvCGHpuLI7D8bb+e1zdEvHZH6ZBBuejjMQeMxKVyd7Lnvj378a+3a3936FmbbEdto8xv+dY9/PW2ncjq93xQ/wIe2BPF/PrJZc+zHIYs63MbmHc6pDfX/yhcb01brDGjYyjyO5oK7+f8tk+w0H4OQ52+HlI4MFamDV5eG0K6b1hOBxHWH1oenAH9d7pUHP782bboObxbizC+fTcgozwWM76/9xvbe9v5tPQG9Y+b8N06jADZ1r1CtZog9/5tYVkdxG+yHFf8oRHQ7Rrgj2DW3h9K27D7bZtneoWxHz2RDOwBPPblVp98AT5tfMVNZuAE/HrGPNbg3zWtDI6k/E7/B5/wFk428X85tN/BdjaYWzjjbzvZfrxCl60vOQPPXeV3F7D63gDF9PXS3ApLsPlDj+vCDxYC7MmsayN6cE71PuuQ83tz5ttizIf7d2T9NypjPDoxOPmY19DJ0x9IvE+x+3iCY+GaNcE++e4wes38RbejrH/FMVOI7L4Gr6OjVPo3j1dieeaEA/3AUw9FTA=
+  </data>
+ </layer>
+ <layer name="Graphics" width="240" height="24">
+  <data encoding="base64" compression="zlib">
+   eJztmMtKHEEYhQtm4Uyc6ZkJKCSg8Ra3wah5iahgIAF19AXES1ybvILuhLxAMmqy1fgKURMQ8gKiUbfekqxypBWaVujYVdXV//T54KN6NtV/VfWprh6lCCGSmcgpVQs5mdPvK24fNvtzSXiekxqPyfUl6WMRa/ku5PuY67tooA+b/f0vNvaN8DwnNR6T62sLF3ubyXva2COzvO/eNfb7jN/VvpFVXOxtJu9pY4+UsO/a4q6xZ2n8tnD1DRAXafWapJG+PSWSxvl39Q0QlzTU62oddc6QaXz2pGHrDM+1SRaJ32ISa74vUnOQhbUhyeI6C3HuzxwQ4uP6rC4xi5L/m5FcOzGLxOyZIA3/zcRFcu0m4T5GiFy4jxFCCLHJZlGpr0XXVcijw1Oq03NdBckqG0U/uy14Bh97foa3mONInnh+dm/m7SrDXcwxSZhTZPUskN9zXF8wv5FMYK5qgfxOwimN/J6XMe/wEv6Gf+Dfsrl6SWPyrOQ/g63w0fWz+Lzkuqr0s+LdnrcPGvntq2DeYT8cgIPwRcVcvaQxmUZWR/HcvYKv4Rs4y/xGsufdnrefGvmdQVZn4Rych2/hgqH8fssrtQ134C78Dn/kzfRN3PIRWf0UyGsd16vMbyRlnG0rgfNtFdcPNc67dWR1Fa7BdfgZfjGU36aCUnlYgA9gMywWzPRN3LIfyuoBfh8yv5G8RFaHAnkdxvWIRn4PkNVD+AsewWN4opnf8Hs33PI9TIgZOqtKdcFu2AOfwt6qXp9N1+/Ym/duuI37Hl5C5peZe5IB2nCWaS+xldymoQaO1U07BsfZim7TUAPH6qb9B3BTMkQ=
+  </data>
+ </layer>
+ <layer name="Tree" width="240" height="24">
+  <data encoding="base64" compression="zlib">
+   eJzt2mdPFFEYhuFBV2VhaYLoP7Aioth7BSso/gM71sTee0FQTOzlgxVsiWKh2wVrYu9+sZvYuxTLTeJGpO46Z3YXeJ/kCgSyc4bhPMzZM2iaROKaWe2laWuwFuuwHhuwEZuwGVu8nH2WEomkpFyhm1dxDddxAzdxC7dxB3elvxKJS8bTW9Ms8II3fOALP9SGPwK8nX2WEomkpITRzXD0Rh/0RT/0xwBEIFL6K5G4ZBbSzUVYjCVYimWIwXLEIk76K5G4ZE7QzZM4hdM4g7PIQjbO4bz0V2JAZO9Uf/LoZj5+4Cd+FXTVR9PcUA3VYfJx9llKKmNk71R/WtPNNmiLdmiPDuiITuiMLtJfiQGRvVN1mUxHp2AqpmE6ZmAmZkl/JQZE9k7VJYmOHkI865VVOMrnyUhBqvRXWW6ZWRviDu7iHu7jAR6anX12jo3snaqPtb8SY+LnwdoQ/ghAHQSiLup5OPvsHBvZO1Uf6a+x6U9HByACkRiIQYjC4CrWX9k7VZ9LdPey9NewxNDR5YhFHFZgJeKxqor1V/ZO1Uf6a2yy6Gg2zuE8LuAiLuFyFeuvNbJ3qi6yfjY2bp6sDVEdJtRATdSCu2f5r49x5/7tbvx5OjKyd6oucv81Nh3paCd0Rhd0RTd0Rw8b+ptFd7NL6e9EX02bhMmYgqmY5qv2/I2M3Dv0R66hsZlOR2dgJmZhNuZgLubZ0F83M/fvUp4zHaCrB5GEQziMIxWov3Lv0B+5ho5NGp1NRwYybehvWXlFV1/jDd7iHd4b2N8PHPsjPuGzgnFqefMewsbnRarHriyx5xpK9OcLnf2Kb/ius7/1/TStARqiERqjiV/5r+vpoWm9EIZwO/bQgjh2UwSjmQ3jlJfuzLseReaeP2uNANRBYKF1h+qxK0rK2/8o6RpK1CXIwrxDMJohBM3RAqEWfccewjweimEYjhEYacPcnk9nF2AhFtnR31EcOxqjMUZHh2Yz3+ZgLuZhPhb8mYMRdDYSAzEIUWa1Y1e0lLX/URDrNZQUz1Huj8lIQaod98pgE101/f0YTU9HYwzGYhzGY4Kl9HECC/3OgjhGU9O/Y+Tw/VxsZS5vw3bswM5Cc/sU3TxdQj+P8bXjOIGTdvR3F8dOQCJ26+hQGvMtHRnIxDEc/zMHY+lrHFZgJeLNpY+dx8+fX8n25oumrP2PglivoaR4Puhc31qTQE8TsRt7sBf7sN+idhxbk0Nnc5GHfCc8g/7CfPuKb/iOHOT+xxxszbxuY/D/kEs/qnYe0dHHeIKneIbneIGXOtfPFTUhPryHQAuEoiVaudhzX1V/YySOz2+oDRbf
+  </data>
+ </layer>
+ <objectgroup name="Platform"/>
+ <objectgroup name="Ground">
+  <object id="6" x="0" y="352" width="3840" height="32"/>
+  <object id="7" x="3508" y="864"/>
+  <object id="9" x="496.667" y="320" width="161.333" height="31.3333"/>
+  <object id="10" x="528.667" y="287.333" width="92" height="30.6667"/>
+  <object id="12" x="1297.33" y="302.667" width="94.6667" height="48.6667"/>
+  <object id="13" x="1936" y="304" width="144" height="48"/>
+  <object id="14" x="2928" y="304" width="96" height="16"/>
+  <object id="15" x="3024" y="240" width="96" height="16"/>
+  <object id="16" x="3120" y="176" width="96" height="16"/>
+  <object id="18" x="3216" y="112" width="96" height="16"/>
+  <object id="19" x="3312" y="176" width="96" height="16"/>
+  <object id="21" x="3408" y="240" width="96" height="16"/>
+  <object id="22" x="3504" y="304" width="96" height="16"/>
+ </objectgroup>
+ <objectgroup name="Door">
+  <object id="23" x="3712.67" y="296.667" width="30.6667" height="54"/>
+  <object id="24" x="2464" y="295.333" width="31.3333" height="55.3333"/>
+ </objectgroup>
+ <objectgroup name="Object">
+  <object id="27" x="1527.67" y="349.667">
+   <polyline points="0,0 -4,-6.66667 -3,-12.3333 -6.33333,-11.6667 -5,-26.6667 10.3333,-39.3333 15.6667,-39.3333 15.6667,-41.6667 14,-42.6667 14,-45.6667 37.6667,-45.3333 38.6667,-45.6667 39,-42.6667 39,-40.6667 42,-40 57.3333,-28 69.3333,-27 72,-22.6667 72.3333,-10.3333 71.3333,-9.33333 71,-5.33333 67.6667,1 1.33333,0.666667"/>
+  </object>
+  <object id="28" x="848" y="336" width="32" height="16"/>
+  <object id="29" x="3340" y="655" width="22" height="1"/>
+ </objectgroup>
+</map>
