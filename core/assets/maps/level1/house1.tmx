@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="104" height="13" tilewidth="16" tileheight="16" infinite="0" nextobjectid="22">
+ <tileset firstgid="1" source="batch-1.tsx"/>
+ <tileset firstgid="3601" source="batch-2.tsx"/>
+ <layer name="Background" width="104" height="13">
+  <data encoding="base64" compression="zlib">
+   eJzt0TEKgEAMRcH08dauJ8oF18bSxUY2xQQGUn54dUQUAAB89NzuHawb7d7Aext9+tIG+MuZEeN2pb/jPwHKG9jr
+  </data>
+ </layer>
+ <layer name="Graphics" width="104" height="13">
+  <data encoding="base64" compression="zlib">
+   eJzt11lPE1EYxvG3LQHUVgU3WuPColcq3CPeKUEFdw18AgQU9Du4gICKwV3coqCgN8blXkEExai4b2FR0AsTxHv9mw6hIZ3D9HQqLfFNfldnzpmZ9zmnmYoEr9tukTu4i3tuk4siUIH3nWx1Il7kJE7hNM7gLM6hAedxARdxCZfjzdcaoj8/MYxfJr2KRC8D72tX6T5nuVekAnuw1xv+c7yg3914iVd4jTd4i3d4jw/4iE/4bOTT4xTpdY6us8wjshwrkIksT/D7mfXyCtdfRSOaTObaVVZ6qJt5M+u14AZujllbJ/MZCSIzkYRkzMJszMFczEMKvPBhfoJ/3gKXyELX6DrF9HQnSlCKshB73MP1vehDv8lcu86eqofh1gDrDeIbvo9ZWyfzdfR7PfJRgA3YiE3YjC3Yim3Yjh1GPoVkU+RSr213hfp+Znmqemhlvmo83SeSgSVY6rP2nKo6QL8PohJVOIRq1KAWh3EER1GHY0Y+9WRz/B/nE2qZ5Wm1h+PtByv7ZeR3W7fu0+8HaEUbHqIdj9CBTjzGE3ThqZHPM7J5PkH53HL7xUKN/G7r1u+//U4UccCJH+7gpjA2FdMS/fM8cSLT42x5Ba2KlXzCrWz6vRI5WKXIZzVja5Br5JNHNmsjmE8p34Zl2IXdKEeF8b0YS+fHSiUhWTGuk88+stkfwXwayaIJ13AdzWgJyGcyVT4KFOPReH76yKIfX/AVAxh0jj9vImrYwf9xh/78SlQpxqPx/Czi22MxUpGGdGRE6fdiJvsmK4y904o2xbhOPv8reusPUJLL3A==
+  </data>
+ </layer>
+ <objectgroup name="Ground">
+  <object id="14" x="0" y="192" width="1664" height="16"/>
+  <object id="20" x="-0.666667" y="1.33333" width="4" height="188.667"/>
+  <object id="21" x="1658.67" y="1.33333" width="4" height="190"/>
+ </objectgroup>
+ <objectgroup name="Platforms">
+  <object id="15" x="400" y="128" width="96" height="64"/>
+ </objectgroup>
+ <objectgroup name="Obstacles">
+  <object id="16" x="1088" y="160" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup name="Doors">
+  <object id="18" x="1520" y="96" width="96" height="96"/>
+ </objectgroup>
+</map>

@@ -10,6 +10,7 @@ public class Constants {
 	public static final byte PLAYER_BITS = 1;
 	public static final byte NON_INTERACTIVE_BITS = 2;
 	public static final byte INTERACTIVE_BITS = 4;
+	public static final byte BULLET_BITS = 8;
 	
 	public static final BodyType DYNAMIC_BODY = BodyDef.BodyType.DynamicBody;
 	public static final BodyType STATIC_BODY = BodyDef.BodyType.StaticBody;

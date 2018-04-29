@@ -11,13 +11,15 @@ import com.dom.forti2d.tools.Constants;
 
 public class Player extends Sprite {
 	
-	private final World world;
+	private final float radius = 8;
 	
-	private final float x = 256, y = 32, radius = 8;
+	/* variables for texture coordinate mappings */
 	private final short spriteWidth = 20, spriteHeight = 32, noGunY = 101, pistolY = 134, rifleY = 171, rocketLauncherY = 212, paddingRocketLauncher = 3;
-	private final short firstFramex = 9, secondFrameX = 41, thirdFrameX = 73, fourthFrameX = 98, fifthFrameX = 127, sixthFrameX = 155, padding = 1;
+	private final short firstFrameX = 9, secondFrameX = 41, thirdFrameX = 73, fourthFrameX = 98, fifthFrameX = 127, sixthFrameX = 155, padding = 1;
 	
 	private float stateTimer;
+	public float health;
+	public float sheild;
 	
 	/* state space of the playable character */
 	private enum State {
@@ -64,8 +66,6 @@ public class Player extends Sprite {
 	
 	public Player(World world) {
 		super(Constants.ATLAS.findRegion("character"));
-		this.world = world;
-		this.stateTimer = 0;
 		this.currentState = State.IDLE_NO_GUN;
 		this.previousState = State.IDLE_NO_GUN;
 		this.runningRight = true;
@@ -73,9 +73,9 @@ public class Player extends Sprite {
 		this.hasPistol = false;
 		this.hasRifle = false;
 		this.hasRocketLauncher = false;
-		
-		body = BodyBuilder.makeCharacterBody(world, x, y, radius);
-		body.setUserData(this);
+		this.stateTimer = 0;
+		this.health = 1;
+		this.sheild = 1;
 		
 		setTextures();
 		setAnimations();
@@ -85,10 +85,10 @@ public class Player extends Sprite {
 	}
 	
 	private void setTextures() {
-		idleNoGun = new TextureRegion(getTexture(), 155, noGunY, spriteWidth, spriteHeight);
-		idlePistol = new TextureRegion(getTexture(), 155, pistolY, spriteWidth, spriteHeight);
-		idleRifle = new TextureRegion(getTexture(), 155, rifleY, spriteWidth, spriteHeight);
-		idleRocketLauncher = new TextureRegion(getTexture(), 157, rocketLauncherY, spriteWidth, spriteHeight);
+		idleNoGun = new TextureRegion(getTexture(), sixthFrameX, noGunY, spriteWidth, spriteHeight);
+		idlePistol = new TextureRegion(getTexture(), sixthFrameX, pistolY, spriteWidth, spriteHeight);
+		idleRifle = new TextureRegion(getTexture(), sixthFrameX, rifleY, spriteWidth, spriteHeight);
+		idleRocketLauncher = new TextureRegion(getTexture(), sixthFrameX, rocketLauncherY, spriteWidth, spriteHeight);
 		
 		jumpingNoGun = new TextureRegion(getTexture(), fourthFrameX, noGunY, spriteWidth, spriteHeight);
 		jumpingPistol = new TextureRegion(getTexture(), fourthFrameX, pistolY, spriteWidth, spriteHeight);
@@ -100,7 +100,7 @@ public class Player extends Sprite {
 	private void setAnimations() {
 		Array<TextureRegion> frames = new Array<TextureRegion>();
 		
-		frames.add(new TextureRegion(getTexture(), firstFramex, noGunY, spriteWidth, spriteHeight));
+		frames.add(new TextureRegion(getTexture(), firstFrameX, noGunY, spriteWidth, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), secondFrameX, noGunY, spriteWidth, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), thirdFrameX, noGunY, spriteWidth, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), fourthFrameX, noGunY, spriteWidth, spriteHeight));
@@ -109,7 +109,7 @@ public class Player extends Sprite {
 		runningNoGun = new Animation<TextureRegion>(0.15f, frames);
 		frames.clear();
 				
-		frames.add(new TextureRegion(getTexture(), firstFramex, pistolY, spriteWidth, spriteHeight));
+		frames.add(new TextureRegion(getTexture(), firstFrameX, pistolY, spriteWidth, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), secondFrameX, pistolY, spriteWidth, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), thirdFrameX, pistolY, spriteWidth, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), fourthFrameX, pistolY, spriteWidth, spriteHeight));
@@ -118,7 +118,7 @@ public class Player extends Sprite {
 		runningPistol = new Animation<TextureRegion>(0.15f, frames);
 		frames.clear();
 		
-		frames.add(new TextureRegion(getTexture(), firstFramex, rifleY, spriteWidth + padding, spriteHeight));
+		frames.add(new TextureRegion(getTexture(), firstFrameX, rifleY, spriteWidth + padding, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), secondFrameX, rifleY, spriteWidth + padding, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), thirdFrameX, rifleY, spriteWidth + padding, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), fourthFrameX, rifleY, spriteWidth + padding, spriteHeight));
@@ -127,7 +127,7 @@ public class Player extends Sprite {
 		runningRifle = new Animation<TextureRegion>(0.15f, frames);
 		frames.clear();
 		
-		frames.add(new TextureRegion(getTexture(), firstFramex + paddingRocketLauncher, rocketLauncherY, spriteWidth + padding, spriteHeight));
+		frames.add(new TextureRegion(getTexture(), firstFrameX + paddingRocketLauncher, rocketLauncherY, spriteWidth + padding, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), secondFrameX + paddingRocketLauncher, rocketLauncherY, spriteWidth + padding, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), thirdFrameX + paddingRocketLauncher, rocketLauncherY, spriteWidth + padding, spriteHeight));
 		frames.add(new TextureRegion(getTexture(), fourthFrameX + paddingRocketLauncher, rocketLauncherY, spriteWidth + padding, spriteHeight));
@@ -137,7 +137,9 @@ public class Player extends Sprite {
 		frames.clear();
 	}
 	
-	/* state machine */
+	/* state machine 
+	 * @return - returns current frame based on state 
+	 */
 	public TextureRegion getFrame(float delta) {
 		currentState = getState();
 		TextureRegion region;
@@ -217,6 +219,34 @@ public class Player extends Sprite {
 			return State.IDLE_ROCKET_LAUNCHER;
 		else
 			return null;
+	}
+	
+	public void createBody(World world, float x, float y) {
+		this.body = BodyBuilder.makeCharacterBody(world, x, y, radius);
+		this.body.setUserData(this);
+	}
+	
+	public void decrementHealth(float delta) {
+		if (sheild <= 0) {
+			float tmp = health;
+			if (tmp - delta >= 0) {
+				health -= delta;
+			} else {
+				health = 0;
+			}
+		} else {
+			float tmp = sheild;
+			if (tmp - delta >= 0) {
+				sheild -= delta;
+			} else {
+				sheild = 0;
+				health -= delta;
+			}
+		}
+	}
+	
+	public void shoot() {
+		
 	}
 	
 	public void update(float delta) {
