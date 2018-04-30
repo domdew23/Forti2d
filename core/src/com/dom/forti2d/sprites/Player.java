@@ -64,6 +64,8 @@ public class Player extends Sprite {
 	public boolean hasRifle;
 	public boolean hasRocketLauncher;
 	
+	private int[] ammo; /* [0] - pistol, [1] - rifle, [2] rocketLauncher */
+	
 	public Player(World world) {
 		super(Constants.ATLAS.findRegion("character"));
 		this.currentState = State.IDLE_NO_GUN;
@@ -76,6 +78,7 @@ public class Player extends Sprite {
 		this.stateTimer = 0;
 		this.health = 1;
 		this.sheild = 1;
+		this.ammo = new int[] {0, 0, 0};
 		
 		setTextures();
 		setAnimations();
@@ -247,6 +250,10 @@ public class Player extends Sprite {
 	
 	public void shoot() {
 		
+	}
+	
+	public int[] getAmmo() {
+		return ammo;
 	}
 	
 	public void update(float delta) {

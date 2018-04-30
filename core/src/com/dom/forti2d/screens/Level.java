@@ -14,6 +14,11 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dom.forti2d.GameMain;
 import com.dom.forti2d.bullets.Bullet;
+import com.dom.forti2d.guns.Pistol;
+import com.dom.forti2d.guns.Rifle;
+import com.dom.forti2d.guns.RocketLauncher;
+import com.dom.forti2d.hud.AmmoDisplay;
+import com.dom.forti2d.hud.Slots;
 import com.dom.forti2d.listeners.CollisionListener;
 import com.dom.forti2d.objects.Doors;
 import com.dom.forti2d.objects.Ground;
@@ -48,6 +53,8 @@ public abstract class Level implements Screen {
 	protected Enemy redElite;
 	protected Enemy grunt;
 	protected Bullet bullet;
+	protected Slots slots;
+	protected AmmoDisplay ammoDisplay;
 	
 	public Level(GameMain game, String mapName) { 
 		this.game = game;
@@ -83,6 +90,9 @@ public abstract class Level implements Screen {
 		blueElite = new BlueElite(world, 306f, 32f);
 		redElite = new RedElite(world, 356f, 32f);
 		grunt = new Grunt(world, 206f, 32f);
+		
+		slots = new Slots();
+		ammoDisplay = new AmmoDisplay();
 	}
 	
 	public void show() {
@@ -129,6 +139,8 @@ public abstract class Level implements Screen {
 		blueElite.update(delta);
 		redElite.update(delta);
 		grunt.update(delta);
+		ammoDisplay.update();
+		slots.update();
 		if (bullet != null) bullet.update(delta);
 		renderer.setView(camera);
 		game.batch.setProjectionMatrix(camera.combined);
@@ -136,6 +148,9 @@ public abstract class Level implements Screen {
 	
 	private void draw(float delta) {
 		renderer.render();
+		slots.draw(delta);
+		ammoDisplay.draw(delta);
+
 		debug.render(world, camera.combined);
 		game.batch.begin();
 		player.draw(game.batch);

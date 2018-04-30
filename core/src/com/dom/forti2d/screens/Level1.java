@@ -23,11 +23,11 @@ public class Level1 extends Level {
 		this.lastY = player.body.getPosition().y;
 		this.created = true;
 		this.changedScreen = false;
+		this.ammoDisplay.setPlayer(player);
 	}
 	
 	protected void handleInput(float delta) {
 		super.handleInput(delta);
-		System.out.println(player.getX());
 		if (Gdx.input.isKeyJustPressed(Keys.R)) {
 			blueElite.decrementHealth(.3f);
 			redElite.decrementHealth(.3f);
