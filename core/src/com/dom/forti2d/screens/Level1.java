@@ -4,6 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.dom.forti2d.GameMain;
 import com.dom.forti2d.bullets.PistolBullet;
+import com.dom.forti2d.hud.HUDObject;
+import com.dom.forti2d.items.Pistol;
+import com.dom.forti2d.items.Rifle;
+import com.dom.forti2d.items.RocketLauncher;
 import com.dom.forti2d.sprites.Player;
 
 public class Level1 extends Level {
@@ -23,16 +27,25 @@ public class Level1 extends Level {
 		this.lastY = player.body.getPosition().y;
 		this.created = true;
 		this.changedScreen = false;
-		this.ammoDisplay.setPlayer(player);
+		
+		player.addItem(new RocketLauncher(0, "RocketLauncher"), 1);
+		player.addItem(new Pistol(2, "Pistol"), 3);
+		player.addItem(new RocketLauncher(1, "RocketLauncher"), 2);
+		player.addItem(new Rifle(3, "Rifle"), 4);
+
+		for (HUDObject h : hud)
+			h.setPlayer(player);
 	}
 	
 	protected void handleInput(float delta) {
 		super.handleInput(delta);
+		super.checkEquipmentChange(delta);
 		if (Gdx.input.isKeyJustPressed(Keys.R)) {
 			blueElite.decrementHealth(.3f);
 			redElite.decrementHealth(.3f);
 			grunt.decrementHealth(.3f);
-			bullet = new PistolBullet(world,  ((player.getX() - player.getWidth() / 2) + .3f) * 100, ((player.getY() + player.getHeight() / 2) - .02f) * 100, 30f, "sprites/rifleBullet.png");
+			player.decrementHealth(.3f);
+			bullet = new PistolBullet(world,  ((player.getX() - player.getWidth() / 2) + .3f) * 100, ((player.getY() + player.getHeight() / 2) - .02f) * 100, 30f, "sprites/rifleBullet.png", player);
 		}
 		
 	}

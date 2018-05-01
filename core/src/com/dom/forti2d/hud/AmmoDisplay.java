@@ -4,25 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.dom.forti2d.sprites.Player;
 
-public class AmmoDisplay {
+public class AmmoDisplay extends HUDObject {
 
-	private Stage stage;
 	private Label label;
 	private Label[] labels;
 	private BitmapFont whiteFont;
 	
-	private Player player;
-	
 	public AmmoDisplay() {
+		super();
 		this.labels = new Label[3];
-		
-		this.stage = new Stage();
 		this.whiteFont = new BitmapFont(Gdx.files.internal("fonts/white.fnt"), false);
 		
 		LabelStyle style = new LabelStyle(whiteFont, Color.WHITE);
@@ -53,17 +47,8 @@ public class AmmoDisplay {
 	
 	}
 	
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-	
 	public void update() {
 		for (int i = 0; i < labels.length; i++)
 			labels[i].setText("x " + player.getAmmo()[i]);
-	}
-	
-	public void draw(float delta) {
-		stage.act(delta);
-		stage.draw();
 	}
 }

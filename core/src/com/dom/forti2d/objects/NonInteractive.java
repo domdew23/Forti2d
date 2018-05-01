@@ -1,5 +1,9 @@
 package com.dom.forti2d.objects;
 
+/*
+ * @ author Dominic Dewhurst
+*/
+
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;

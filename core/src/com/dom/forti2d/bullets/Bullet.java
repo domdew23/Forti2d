@@ -6,13 +6,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dom.forti2d.sprites.Player;
 import com.dom.forti2d.tools.BodyBuilder;
 import com.dom.forti2d.tools.Constants;
 
 public class Bullet extends Sprite {
 
 	private final float lifeTime, width, height;
-	private float lifeTimer, x, y, dx;
+	private float lifeTimer, dx;
 	
 	public Body body;
 	// pistol - 6, 2 - 5
@@ -23,15 +24,20 @@ public class Bullet extends Sprite {
 	private byte mBits = Constants.PLAYER_BITS | Constants.NON_INTERACTIVE_BITS;
 	
 	private boolean remove;
-
-	public Bullet(World world, float x, float y, float radians, String textureFile) {
+	
+	public Bullet(World world, float x, float y, float radians, String textureFile, Player player) {
 		super(new Texture(textureFile));
-		this.x = x;
-		this.y = y;
 		this.lifeTime = 1;
 		this.width = 8;
 		this.height = 4;
-		this.dx = Math.abs(MathUtils.sin(radians) * 4f);
+		
+		if (player.runningRight)
+			this.dx = Math.abs(MathUtils.sin(radians) * 4f);
+		else {
+			this.dx = MathUtils.sin(radians) * 4f;
+			x -=  20;
+			this.flip(true, false);
+		}
 		
 		setBounds(getX(), getY(), width / Constants.SCALE, height / Constants.SCALE);
 		setPosition(x / Constants.SCALE, y / Constants.SCALE);
