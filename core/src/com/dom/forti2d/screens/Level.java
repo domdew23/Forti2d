@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dom.forti2d.GameMain;
+import com.dom.forti2d.bullets.Explosion;
 import com.dom.forti2d.hud.AmmoDisplay;
 import com.dom.forti2d.hud.HUDObject;
 import com.dom.forti2d.hud.HealthDisplay;
@@ -32,6 +33,8 @@ import com.dom.forti2d.sprites.RedElite;
 import com.dom.forti2d.tools.Constants;
 
 public abstract class Level implements Screen {
+	
+	public static CopyOnWriteArrayList<Explosion> explosions;
 	
 	protected GameMain game;
 	protected World world;
@@ -57,6 +60,7 @@ public abstract class Level implements Screen {
 		this.mapName = mapName;
 		this.hud = new ArrayList<HUDObject>();
 		this.enemies = new CopyOnWriteArrayList<Enemy>();
+		explosions = new CopyOnWriteArrayList<Explosion>();
 		
 		loadCamera();
 		loadMap();
@@ -129,9 +133,12 @@ public abstract class Level implements Screen {
 		if (player.body.getPosition().x > xLowerBound && player.body.getPosition().x < xUpperBound) camera.position.x = player.body.getPosition().x;
 		camera.update();
 		player.update(delta);
-		
+				
 		for (HUDObject h : hud)
 			h.update();
+		
+		for (Explosion e : explosions)
+			e.update(delta);
 		
 		for (Enemy e : enemies) {
 			e.update(delta);
@@ -155,6 +162,11 @@ public abstract class Level implements Screen {
 		
 		debug.render(world, camera.combined);
 		game.batch.begin();
+		
+		for (Explosion e : explosions) {
+			if (!e.done)
+				e.draw(game.batch);
+		}
 		
 		for (Enemy e : enemies)
 			e.draw(game.batch);

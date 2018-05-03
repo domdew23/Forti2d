@@ -14,7 +14,7 @@ import com.dom.forti2d.tools.Constants;
 public class Bullet extends Sprite {
 
 	private final float lifeTime;
-	private float lifeTimer, dx;
+	protected float lifeTimer, dx, x, y;
 	
 	public Body body;
 	
@@ -23,10 +23,15 @@ public class Bullet extends Sprite {
 	private byte cBits = Constants.BULLET_BITS;
 	private byte mBits = Constants.PLAYER_BITS | Constants.NON_INTERACTIVE_BITS;
 	
-	private boolean remove;
+	protected boolean remove;
+	
+	protected World world;
 	
 	public Bullet(World world, float x, float y, float width, float height, float speed, Player player, Gun gun) {
 		super(gun.getBulletTexture());
+		this.world = world;
+		this.x = x;
+		this.y = y;
 		this.gun = gun;
 		this.lifeTime = 1;
 		

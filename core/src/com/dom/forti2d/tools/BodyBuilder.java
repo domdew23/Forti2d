@@ -101,4 +101,8 @@ public class BodyBuilder {
 	public static Body makeCharacterBody(World world, float x, float y, float radius, Object userData) {
 		return createCircle(world, Constants.DYNAMIC_BODY, x, y, radius, userData);
 	}
+	
+	public static Body makeExplosionBody(World world, float x, float y, float radius, byte mBits, byte cBits, Object userData) {
+		return createCircle(world, Constants.DYNAMIC_BODY, x, y, radius, userData);
+	}
 }
