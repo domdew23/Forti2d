@@ -1,12 +1,20 @@
 package com.dom.forti2d.sprites;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.dom.forti2d.bullets.Bullet;
+import com.dom.forti2d.bullets.PistolBullet;
+import com.dom.forti2d.bullets.RifleBullet;
+import com.dom.forti2d.bullets.RocketBullet;
 import com.dom.forti2d.items.BlankItem;
+import com.dom.forti2d.items.Gun;
 import com.dom.forti2d.items.Item;
 import com.dom.forti2d.items.Pistol;
 import com.dom.forti2d.items.Rifle;
@@ -25,6 +33,8 @@ public class Player extends Sprite {
 	private float stateTimer;
 	public float health;
 	public float sheild;
+	
+	private CopyOnWriteArrayList<Bullet> bullets;
 	
 	/* state space of the playable character */
 	private enum State {
@@ -75,9 +85,12 @@ public class Player extends Sprite {
 	private int inventoryCount;
 
 	private int currentSlot;
+
+	private World world;
 	
 	public Player(World world) {
 		super(Constants.ATLAS.findRegion("character"));
+		this.world = world;
 		this.currentState = State.IDLE_NO_GUN;
 		this.previousState = State.IDLE_NO_GUN;
 		this.runningRight = true;
@@ -91,6 +104,7 @@ public class Player extends Sprite {
 		this.ammo = new int[] {0, 0, 0};
 		this.inventory = new Item[]{new BlankItem(), new BlankItem(), new BlankItem(), new BlankItem(), new BlankItem()};
 		this.inventory[0].setEquipped();
+		this.bullets = new CopyOnWriteArrayList<Bullet>();
 		this.currentSlot = 0;
 		
 		setTextures();
@@ -104,7 +118,7 @@ public class Player extends Sprite {
 		idleNoGun = new TextureRegion(getTexture(), sixthFrameX, noGunY, spriteWidth, spriteHeight);
 		idlePistol = new TextureRegion(getTexture(), sixthFrameX, pistolY, spriteWidth, spriteHeight);
 		idleRifle = new TextureRegion(getTexture(), sixthFrameX, rifleY, spriteWidth, spriteHeight);
-		idleRocketLauncher = new TextureRegion(getTexture(), sixthFrameX, rocketLauncherY, spriteWidth, spriteHeight);
+		idleRocketLauncher = new TextureRegion(getTexture(), sixthFrameX + 2, rocketLauncherY, spriteWidth, spriteHeight);
 		
 		jumpingNoGun = new TextureRegion(getTexture(), fourthFrameX, noGunY, spriteWidth, spriteHeight);
 		jumpingPistol = new TextureRegion(getTexture(), fourthFrameX, pistolY, spriteWidth, spriteHeight);
@@ -238,7 +252,7 @@ public class Player extends Sprite {
 	}
 	
 	public void createBody(World world, float x, float y) {
-		this.body = BodyBuilder.makeCharacterBody(world, x, y, radius);
+		this.body = BodyBuilder.makeCharacterBody(world, x, y, radius, "sensor");
 		this.body.setUserData(this);
 	}
 	
@@ -262,7 +276,21 @@ public class Player extends Sprite {
 	}
 	
 	public void shoot() {
-		
+		if (noGunEquipped)
+			return;
+		else if (pistolEquipped && ammo[0] != 0) {
+			bullets.add(new PistolBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 6, 2, 5, this, (Gun) inventory[currentSlot]));		
+			ammo[0]--;
+		}
+		else if (rifleEquipped && ammo[1] != 0) {
+			bullets.add(new RifleBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 8, 4, 4, this, (Gun) inventory[currentSlot]));		
+			ammo[1]--;
+		}
+		else if (rocketLauncherEquipped && ammo[2] != 0) {
+			bullets.add(new RocketBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 16, 6, 3, this, (Gun) inventory[currentSlot]));		
+			ammo[2]--;
+		}
+
 	}
 	
 	public void clearEquipped(int equipped) {
@@ -317,6 +345,12 @@ public class Player extends Sprite {
 		}
 	}
 	
+	public void draw(SpriteBatch batch) {
+		super.draw(batch);
+		for (Bullet b : bullets)
+			b.draw(batch);
+	}
+	
 	public void update(float delta) {
 		if (inventory[currentSlot] instanceof BlankItem)
 			setWeapon(0);
@@ -326,6 +360,16 @@ public class Player extends Sprite {
 			setWeapon(2);
 		else if (inventory[currentSlot] instanceof RocketLauncher)
 			setWeapon(3);
+		
+		for (Bullet b : bullets) {
+			if (b != null) {
+				if (b.shouldRemove() && !world.isLocked()) {
+					world.destroyBody(b.body);
+					bullets.remove(b);
+				}
+				b.update(delta);
+			}
+		}
 		
 		setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
 		setRegion(getFrame(delta));

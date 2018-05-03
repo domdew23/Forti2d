@@ -1,19 +1,23 @@
 package com.dom.forti2d.items;
 
-public class Gun extends Item {
+import com.badlogic.gdx.graphics.Texture;
+
+public abstract class Gun extends Item {
 	
-	protected int ammoCount;
+	protected float damage;
 	
 	public Gun(int tier, String item) {
 		super(tier, item);
-		this.ammoCount = 0;
 	}
 	
-	public int getAmmo() {
-		return ammoCount;
+	public float getDamage() {
+		return damage;
 	}
 	
 	public void setItemDrawable(String item) {
 		this.itemDrawable = Drawables.getItem(tier, item);
 	}
+	
+	public abstract Texture getBulletTexture();
+	protected abstract void setDamage();
 }

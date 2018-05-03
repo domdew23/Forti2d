@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dom.forti2d.bullets.Bullet;
+import com.dom.forti2d.items.Gun;
 import com.dom.forti2d.tools.BodyBuilder;
 import com.dom.forti2d.tools.Constants;
 
@@ -28,6 +30,7 @@ public abstract class Enemy extends Sprite {
 	
 	protected Texture healthBar;
 	protected float healthBarSize;
+	public boolean isDead, kill;
 
 	public Enemy(World world, float x, float y) {
 		super(Constants.ATLAS.findRegion("character"));
@@ -36,10 +39,12 @@ public abstract class Enemy extends Sprite {
 		this.goingRight = true;
 		this.walkingRight = true;
 		this.healthBar = new Texture("sprites/blank.png");
+		this.isDead = false;
+		this.kill = false;
 		
 		setBounds(getX(), getY(), 26 / Constants.SCALE, 23 / Constants.SCALE);
 		setPosition(x, y);
-		this.body = BodyBuilder.makeCharacterBody(world, x, y, radius);
+		this.body = BodyBuilder.makeCharacterBody(world, x, y, radius, this);
 		setAnimation();
 	}
 	
@@ -80,19 +85,32 @@ public abstract class Enemy extends Sprite {
 			health -= delta;
 		} else {
 			health = 0;
-		}	
+		}
+		
+		if (health <= 0)
+			kill = true;
 	}
 	
 	public void draw(SpriteBatch batch) {
-		super.draw(batch);
-		batch.draw(healthBar, body.getPosition().x - .11f,  body.getPosition().y + .14f, healthBarSize * health, .04f);
+		if(!isDead) {
+			super.draw(batch);
+			batch.draw(healthBar, body.getPosition().x - .11f,  body.getPosition().y + .14f, healthBarSize * health, .04f);
+		}
 	}
 	
 	public void update(float delta) {
-		stateTimer += delta;
-		checkChange();
-		setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
-		setRegion(getFrame(delta));
+		if (!kill) {
+			stateTimer += delta;
+			checkChange();
+			setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+			setRegion(getFrame(delta));
+		}
+	}
+	
+	public void gotShot(Bullet bullet) {
+		Gun gun = bullet.getGun();
+		float damage = gun.getDamage();
+		decrementHealth(damage);
 	}
 	
 	protected abstract void setAnimation();

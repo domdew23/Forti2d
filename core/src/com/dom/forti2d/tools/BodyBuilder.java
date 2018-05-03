@@ -46,7 +46,7 @@ public class BodyBuilder {
 	 * @param cBits - category bits (what the body is)
 	 * @param mBits - mask bits ( what the body collides with)
 	 */
-	public static Body createBox(World world, BodyType type, float x, float y, float width, float height, short cBits, short mBits) {
+	public static Body createBox(World world, BodyType type, float x, float y, float width, float height, short cBits, short mBits, Object userData) {
 		BodyDef bodyDef = new BodyDef();
 		FixtureDef fixDef = new FixtureDef();
 		PolygonShape shape = new PolygonShape();
@@ -60,7 +60,7 @@ public class BodyBuilder {
 		fixDef.shape = shape;
 		fixDef.filter.categoryBits = cBits;
 		fixDef.filter.maskBits = mBits;
-		body.createFixture(fixDef);
+		body.createFixture(fixDef).setUserData(userData);
 		return body;
 	}
 	
@@ -71,7 +71,7 @@ public class BodyBuilder {
 	 * @param y - y coordinate of body
 	 * @param radius - radius of body's circle
 	 */
-	public static Body createCircle(World world, BodyType type, float x, float y, float radius) {
+	public static Body createCircle(World world, BodyType type, float x, float y, float radius, Object userData) {
 		Body body;
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(x / Constants.SCALE, y / Constants.SCALE);
@@ -83,8 +83,8 @@ public class BodyBuilder {
 		shape.setRadius(radius / Constants.SCALE);
 		fixDef.shape = shape;
 		fixDef.filter.categoryBits = Constants.PLAYER_BITS;
-		fixDef.filter.maskBits = Constants.NON_INTERACTIVE_BITS | Constants.PLAYER_BITS;
-		body.createFixture(fixDef);
+		fixDef.filter.maskBits = Constants.NON_INTERACTIVE_BITS | Constants.PLAYER_BITS | Constants.BULLET_BITS;
+		body.createFixture(fixDef).setUserData(userData);
 		
 		EdgeShape head = new EdgeShape();
 		head.set(new Vector2(-5 / Constants.SCALE, 5 / Constants.SCALE), new Vector2(5 / Constants.SCALE, 5 / Constants.SCALE));
@@ -98,7 +98,7 @@ public class BodyBuilder {
 	}
 	
 	
-	public static Body makeCharacterBody(World world, float x, float y, float radius) {
-		return createCircle(world, Constants.DYNAMIC_BODY, x, y, radius);
+	public static Body makeCharacterBody(World world, float x, float y, float radius, Object userData) {
+		return createCircle(world, Constants.DYNAMIC_BODY, x, y, radius, userData);
 	}
 }

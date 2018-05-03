@@ -3,7 +3,6 @@ package com.dom.forti2d.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.dom.forti2d.GameMain;
-import com.dom.forti2d.bullets.PistolBullet;
 import com.dom.forti2d.hud.HUDObject;
 import com.dom.forti2d.items.Pistol;
 import com.dom.forti2d.items.Rifle;
@@ -40,12 +39,15 @@ public class Level1 extends Level {
 	protected void handleInput(float delta) {
 		super.handleInput(delta);
 		super.checkEquipmentChange(delta);
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F)) {
+			player.getAmmo()[0]++;
+			player.getAmmo()[1]++;
+			player.getAmmo()[2]++;
+		}
+		
 		if (Gdx.input.isKeyJustPressed(Keys.R)) {
-			blueElite.decrementHealth(.3f);
-			redElite.decrementHealth(.3f);
-			grunt.decrementHealth(.3f);
-			player.decrementHealth(.3f);
-			bullet = new PistolBullet(world,  ((player.getX() - player.getWidth() / 2) + .3f) * 100, ((player.getY() + player.getHeight() / 2) - .02f) * 100, 30f, "sprites/rifleBullet.png", player);
+			player.shoot();
 		}
 		
 	}

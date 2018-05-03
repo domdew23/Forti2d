@@ -1,6 +1,7 @@
 package com.dom.forti2d.screens;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -14,7 +15,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dom.forti2d.GameMain;
-import com.dom.forti2d.bullets.Bullet;
 import com.dom.forti2d.hud.AmmoDisplay;
 import com.dom.forti2d.hud.HUDObject;
 import com.dom.forti2d.hud.HealthDisplay;
@@ -45,10 +45,7 @@ public abstract class Level implements Screen {
 	private final float xUpperBound=36.4f, xLowerBound=2;
 	private final String mapName;
 	
-	protected Enemy blueElite;
-	protected Enemy redElite;
-	protected Enemy grunt;
-	protected Bullet bullet;
+	protected CopyOnWriteArrayList<Enemy> enemies;
 	
 	protected ArrayList<HUDObject> hud;
 	
@@ -59,6 +56,7 @@ public abstract class Level implements Screen {
 		this.debug = new Box2DDebugRenderer();
 		this.mapName = mapName;
 		this.hud = new ArrayList<HUDObject>();
+		this.enemies = new CopyOnWriteArrayList<Enemy>();
 		
 		loadCamera();
 		loadMap();
@@ -82,9 +80,9 @@ public abstract class Level implements Screen {
 		new Obstacles(map, world);
 		new Doors(map, world);
 		
-		blueElite = new BlueElite(world, 306f, 32f);
-		redElite = new RedElite(world, 356f, 32f);
-		grunt = new Grunt(world, 206f, 32f);
+		enemies.add(new BlueElite(world, 306f, 32f));
+		enemies.add(new RedElite(world, 356f, 32f));
+		enemies.add(new Grunt(world, 206f, 32f));
 		
 		hud.add(new SlotsDisplay());
 		hud.add(new AmmoDisplay());
@@ -131,14 +129,21 @@ public abstract class Level implements Screen {
 		if (player.body.getPosition().x > xLowerBound && player.body.getPosition().x < xUpperBound) camera.position.x = player.body.getPosition().x;
 		camera.update();
 		player.update(delta);
-		blueElite.update(delta);
-		redElite.update(delta);
-		grunt.update(delta);
 		
 		for (HUDObject h : hud)
 			h.update();
 		
-		if (bullet != null) bullet.update(delta);
+		for (Enemy e : enemies) {
+			e.update(delta);
+			if (e.kill && !world.isLocked()) {
+				if (!e.isDead) {
+					world.destroyBody(e.body);
+					e.isDead = true;
+					enemies.remove(e);
+				}
+			}
+		}
+		
 		renderer.setView(camera);
 		game.batch.setProjectionMatrix(camera.combined);
 	}
@@ -147,14 +152,14 @@ public abstract class Level implements Screen {
 		renderer.render();
 		for (HUDObject h : hud)
 			h.draw(delta);
-
+		
 		debug.render(world, camera.combined);
 		game.batch.begin();
+		
+		for (Enemy e : enemies)
+			e.draw(game.batch);
+		
 		player.draw(game.batch);
-		blueElite.draw(game.batch);
-		redElite.draw(game.batch);
-		if (bullet != null) bullet.draw(game.batch);
-		grunt.draw(game.batch);
 
 		game.batch.end();
 	}

@@ -13,10 +13,13 @@ import com.dom.forti2d.tools.BodyBuilder;
 import com.dom.forti2d.tools.Constants;
 
 public abstract class NonInteractive {
+	
+	private byte cBits = Constants.NON_INTERACTIVE_BITS;
+	private byte mBits = Constants.PLAYER_BITS | Constants.BULLET_BITS;
 	public NonInteractive(TiledMap map, World world, String id) {
 		for (MapObject object : map.getLayers().get(id).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			BodyBuilder.createBox(world, Constants.STATIC_BODY, rect, Constants.NON_INTERACTIVE_BITS, Constants.PLAYER_BITS, this);
+			BodyBuilder.createBox(world, Constants.STATIC_BODY, rect, cBits, mBits, this);
 		}
 	}
 }
