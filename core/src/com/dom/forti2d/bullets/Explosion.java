@@ -8,31 +8,26 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.dom.forti2d.screens.Level;
-import com.dom.forti2d.tools.BodyBuilder;
 import com.dom.forti2d.tools.Constants;
 
 public class Explosion extends Sprite {
-
-	private final short firstFrameX = 9, secondFrameX = 41, thirdFrameX = 73, fourthFrameX = 98, fifthFrameX = 127, sixthFrameX = 155;
-	private final short spriteWidth = 20, spriteHeight = 32, noGunY = 101;
+	
+	private final short width, height;
 	private Animation<TextureRegion> explosion;
-	private Body body;
 	private float stateTimer;
 	private Body bulletBody;
 	
 	public boolean done;
-	private World world;
 	
 	public Explosion(World world, float x, float y, Body bulletBody) {
-		super(Constants.ATLAS.findRegion("character"));
-		this.world = world;
+		super(Constants.ATLAS.findRegion("explosion"));
 		this.bulletBody = bulletBody;
+		this.width = 100;
+		this.height = 100;
 		this.stateTimer = 0;
 		
-		setBounds(getX(), getY(), 18 / Constants.SCALE, 22 / Constants.SCALE);
+		setBounds(getX(), getY(), 20 / Constants.SCALE, 20 / Constants.SCALE);
 		setPosition(x, y);
-		this.body = BodyBuilder.makeCharacterBody(world, bulletBody.getPosition().x * 100, bulletBody.getPosition().y * 100, 8, this);
-		this.body.setGravityScale(0);
 
 		setAnimation();
 	}
@@ -40,13 +35,12 @@ public class Explosion extends Sprite {
 	private void setAnimation() {
 		Array<TextureRegion> frames = new Array<TextureRegion>();
 		
-		frames.add(new TextureRegion(getTexture(), firstFrameX, noGunY, spriteWidth, spriteHeight));
-		frames.add(new TextureRegion(getTexture(), secondFrameX, noGunY, spriteWidth, spriteHeight));
-		frames.add(new TextureRegion(getTexture(), thirdFrameX, noGunY, spriteWidth, spriteHeight));
-		frames.add(new TextureRegion(getTexture(), fourthFrameX, noGunY, spriteWidth, spriteHeight));
-		frames.add(new TextureRegion(getTexture(), fifthFrameX, noGunY, spriteWidth, spriteHeight));
-		frames.add(new TextureRegion(getTexture(), sixthFrameX, noGunY, spriteWidth, spriteHeight));
-		explosion = new Animation<TextureRegion>(0.15f, frames);
+		for (int y = 2; y < 900; y+= 100) {
+			for (int x = 2; x < 900; x+= 100)
+				frames.add(new TextureRegion(getTexture(), x, y, width, height));
+		}
+		
+		explosion = new Animation<TextureRegion>(0.01f, frames);
 		frames.clear();
 	}
 	
@@ -59,11 +53,7 @@ public class Explosion extends Sprite {
 		setPosition(bulletBody.getPosition().x - getWidth() / 2, bulletBody.getPosition().y - getHeight() / 2);
 		setRegion(explosion.getKeyFrame(stateTimer, false));
 		
-		if (explosion.isAnimationFinished(stateTimer)) {
-			done = true;
+		if (explosion.isAnimationFinished(stateTimer))
 			Level.explosions.remove(this);
-			if (!world.isLocked())
-				world.destroyBody(this.body);
-		}
 	}
 }

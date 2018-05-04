@@ -35,6 +35,17 @@ public class Drawables {
 	private static TextureRegionDrawable blueRocketLauncher = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/guns/blueRocketLauncher.png")));
 	private static TextureRegionDrawable goldRocketLauncher = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/guns/goldRocketLauncher.png")));
 	
+	private static TextureRegionDrawable health = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/health.png")));
+	private static TextureRegionDrawable sheild = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/sheild.png")));
+		
+	public static TextureRegionDrawable getHealth() {
+		return health;
+	}
+	
+	public static TextureRegionDrawable getSheild() {
+		return sheild;
+	}
+	
 	public static TextureRegionDrawable getEmptySlot(boolean equipped) {
 		if (equipped)
 			return equippedEmpty;

@@ -46,18 +46,22 @@ public class BodyBuilder {
 	 * @param cBits - category bits (what the body is)
 	 * @param mBits - mask bits ( what the body collides with)
 	 */
-	public static Body createBox(World world, BodyType type, float x, float y, float width, float height, short cBits, short mBits, Object userData) {
+	public static Body createSensor(World world, BodyType type, float x, float y, float width, float height, short cBits, short mBits, Object userData, boolean flipped) {
 		BodyDef bodyDef = new BodyDef();
 		FixtureDef fixDef = new FixtureDef();
-		PolygonShape shape = new PolygonShape();
 		Body body;
 		
 		bodyDef.type = type;
 		bodyDef.position.set((x + width / 2) / Constants.SCALE, (y + height / 2) / Constants.SCALE);
-		
 		body = world.createBody(bodyDef);
-		shape.setAsBox((width / 2) / Constants.SCALE, (height / 2) / Constants.SCALE);
-		fixDef.shape = shape;
+		
+		EdgeShape sensor = new EdgeShape();
+		if (flipped)
+			sensor.set(new Vector2((width / 2) / Constants.SCALE, 0), new Vector2((width / 2) / Constants.SCALE, (height / 2) / Constants.SCALE));
+		else
+			sensor.set(new Vector2((-width / 2) / Constants.SCALE, 0), new Vector2((-width / 2) / Constants.SCALE, (height / 2) / Constants.SCALE));
+		fixDef.shape = sensor;
+		fixDef.isSensor = true;
 		fixDef.filter.categoryBits = cBits;
 		fixDef.filter.maskBits = mBits;
 		body.createFixture(fixDef).setUserData(userData);
@@ -102,7 +106,7 @@ public class BodyBuilder {
 		return createCircle(world, Constants.DYNAMIC_BODY, x, y, radius, userData);
 	}
 	
-	public static Body makeExplosionBody(World world, float x, float y, float radius, byte mBits, byte cBits, Object userData) {
-		return createCircle(world, Constants.DYNAMIC_BODY, x, y, radius, userData);
+	public static Body makeBullet(World world, float x, float y, float width, float height, byte cBits, byte mBits, Object userData, boolean flipped) {
+		return createSensor(world, Constants.DYNAMIC_BODY, x, y, width, height, cBits, mBits, userData, flipped);
 	}
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+
 import com.dom.forti2d.GameMain;
 import com.dom.forti2d.bullets.Explosion;
 import com.dom.forti2d.hud.AmmoDisplay;
@@ -84,8 +85,8 @@ public abstract class Level implements Screen {
 		new Obstacles(map, world);
 		new Doors(map, world);
 		
-		enemies.add(new BlueElite(world, 306f, 32f));
-		enemies.add(new RedElite(world, 356f, 32f));
+		//enemies.add(new BlueElite(world, 306f, 32f));
+		//enemies.add(new RedElite(world, 356f, 32f));
 		enemies.add(new Grunt(world, 206f, 32f));
 		
 		hud.add(new SlotsDisplay());
@@ -101,12 +102,11 @@ public abstract class Level implements Screen {
 			player.body.applyLinearImpulse(new Vector2(-.1f, 0), player.body.getWorldCenter(), true);
 		if (Gdx.input.isKeyPressed(Keys.D) && player.body.getLinearVelocity().x <= 2)
 			player.body.applyLinearImpulse(new Vector2(.1f, 0), player.body.getWorldCenter(), true);
-		if (Gdx.input.isKeyJustPressed(Keys.SPACE))
+		if (Gdx.input.isKeyJustPressed(Keys.SPACE) && player.isNotJumping())
 			player.body.applyLinearImpulse(new Vector2(0, 4f), player.body.getWorldCenter(), true);
 	}
 	
-	protected void checkEquipmentChange(float delta) {
-		
+	protected void checkEquipmentChange(float delta) {	
 		if (Gdx.input.isKeyJustPressed(Keys.NUM_1)) {
 			player.getInventory()[0].setEquipped();
 			player.clearEquipped(0);
@@ -141,7 +141,7 @@ public abstract class Level implements Screen {
 			e.update(delta);
 		
 		for (Enemy e : enemies) {
-			e.update(delta);
+			e.update(delta, player.body.getPosition());
 			if (e.kill && !world.isLocked()) {
 				if (!e.isDead) {
 					world.destroyBody(e.body);
@@ -157,18 +157,17 @@ public abstract class Level implements Screen {
 	
 	private void draw(float delta) {
 		renderer.render();
+		debug.render(world, camera.combined);
+		
 		for (HUDObject h : hud)
 			h.draw(delta);
 		
-		debug.render(world, camera.combined);
 		game.batch.begin();
 		
-		for (Explosion e : explosions) {
-			if (!e.done)
-				e.draw(game.batch);
-		}
-		
 		for (Enemy e : enemies)
+			e.draw(game.batch);
+		
+		for (Explosion e : explosions)
 			e.draw(game.batch);
 		
 		player.draw(game.batch);

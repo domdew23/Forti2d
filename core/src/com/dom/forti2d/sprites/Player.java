@@ -15,10 +15,12 @@ import com.dom.forti2d.bullets.RifleBullet;
 import com.dom.forti2d.bullets.RocketBullet;
 import com.dom.forti2d.items.BlankItem;
 import com.dom.forti2d.items.Gun;
+import com.dom.forti2d.items.Health;
 import com.dom.forti2d.items.Item;
 import com.dom.forti2d.items.Pistol;
 import com.dom.forti2d.items.Rifle;
 import com.dom.forti2d.items.RocketLauncher;
+import com.dom.forti2d.items.Sheild;
 import com.dom.forti2d.tools.BodyBuilder;
 import com.dom.forti2d.tools.Constants;
 
@@ -79,7 +81,7 @@ public class Player extends Sprite {
 	public boolean rifleEquipped;
 	public boolean rocketLauncherEquipped;
 	
-	private int[] ammo; /* [0] - pistol, [1] - rifle, [2] rocketLauncher */
+	private int[] ammo; /* [0] - pistol, [1] - rifle, [2] rocketLauncher, [3] health, [4] sheild */
 	private Item[] inventory;
 
 	private int inventoryCount;
@@ -101,16 +103,15 @@ public class Player extends Sprite {
 		this.stateTimer = 0;
 		this.health = 1;
 		this.sheild = 1;
-		this.ammo = new int[] {0, 0, 0};
+		this.ammo = new int[] {0, 0, 0, 0, 0};
 		this.inventory = new Item[]{new BlankItem(), new BlankItem(), new BlankItem(), new BlankItem(), new BlankItem()};
-		this.inventory[0].setEquipped();
 		this.bullets = new CopyOnWriteArrayList<Bullet>();
 		this.currentSlot = 0;
 		
 		setTextures();
 		setAnimations();
 		
-		setBounds(0, 0, 18 / Constants.SCALE, 22 / Constants.SCALE);
+		setBounds(0, 0, 20 / Constants.SCALE, 20 / Constants.SCALE);
 		setRegion(idleNoGun);
 	}
 	
@@ -256,6 +257,22 @@ public class Player extends Sprite {
 		this.body.setUserData(this);
 	}
 	
+	private void incrementHealth(float delta) {
+		float tmp = health;
+		if (tmp + health > 1)
+			health = 1;
+		else
+			health += delta;
+	}
+	
+	private void incrementSheild(float delta) {
+		float tmp = sheild;
+		if (tmp + sheild > 1)
+			sheild = 1;
+		else
+			sheild += delta;
+	}
+	
 	public void decrementHealth(float delta) {
 		if (sheild <= 0) {
 			float tmp = health;
@@ -276,9 +293,7 @@ public class Player extends Sprite {
 	}
 	
 	public void shoot() {
-		if (noGunEquipped)
-			return;
-		else if (pistolEquipped && ammo[0] != 0) {
+		if (pistolEquipped && ammo[0] != 0) {
 			bullets.add(new PistolBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 6, 2, 5, this, (Gun) inventory[currentSlot]));		
 			ammo[0]--;
 		}
@@ -289,6 +304,16 @@ public class Player extends Sprite {
 		else if (rocketLauncherEquipped && ammo[2] != 0) {
 			bullets.add(new RocketBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 16, 6, 3, this, (Gun) inventory[currentSlot]));		
 			ammo[2]--;
+		} else if (inventory[currentSlot] instanceof Health && health != 1 && ammo[3] != 0){
+			incrementHealth(.15f);
+			ammo[3]--;
+			if (ammo[3] == 0)
+				inventory[currentSlot] = new BlankItem();
+		} else if (inventory[currentSlot] instanceof Sheild && sheild != 1 && ammo[4] != 0){
+			incrementSheild(.25f);
+			ammo[4]--;
+			if (ammo[4] == 0)
+				inventory[currentSlot] = new BlankItem();
 		}
 
 	}
@@ -308,12 +333,20 @@ public class Player extends Sprite {
 			inventory[currentSlot] = item;
 	}
 	
+	public void dropItem() {
+		inventory[currentSlot] = new BlankItem();
+	}
+	
 	public Item[] getInventory() {
 		return inventory;
 	}
 	
 	public int[] getAmmo() {
 		return ammo;
+	}
+	
+	public boolean isNotJumping() {
+		return (body.getLinearVelocity().y == 0);
 	}
 	
 	private void setWeapon(int weapon) {
@@ -352,14 +385,16 @@ public class Player extends Sprite {
 	}
 	
 	public void update(float delta) {
-		if (inventory[currentSlot] instanceof BlankItem)
-			setWeapon(0);
 		if (inventory[currentSlot] instanceof Pistol)
 			setWeapon(1);
 		else if (inventory[currentSlot] instanceof Rifle)
 			setWeapon(2);
 		else if (inventory[currentSlot] instanceof RocketLauncher)
 			setWeapon(3);
+		else
+			setWeapon(0);
+		
+		inventory[currentSlot].setEquipped();
 		
 		for (Bullet b : bullets) {
 			if (b != null) {

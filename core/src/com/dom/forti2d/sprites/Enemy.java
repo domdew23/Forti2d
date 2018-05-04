@@ -20,8 +20,9 @@ public abstract class Enemy extends Sprite {
 	
 	protected Animation<TextureRegion> walk;
 	
-	protected float stateTimer;
-	protected float health;
+	protected float stateTimer, health, healthBarSize, maxSpeed, maxForce;
+	
+	protected Vector2 velocity;
 	
 	private boolean walkingRight;
 	private boolean goingRight;
@@ -29,7 +30,6 @@ public abstract class Enemy extends Sprite {
 	private int count;
 	
 	protected Texture healthBar;
-	protected float healthBarSize;
 	public boolean isDead, kill;
 
 	public Enemy(World world, float x, float y) {
@@ -41,6 +41,9 @@ public abstract class Enemy extends Sprite {
 		this.healthBar = new Texture("sprites/blank.png");
 		this.isDead = false;
 		this.kill = false;
+		this.maxSpeed = .1f;
+		this.maxForce = .05f;
+		this.velocity = new Vector2(0, 0);
 		
 		setBounds(getX(), getY(), 26 / Constants.SCALE, 23 / Constants.SCALE);
 		setPosition(x, y);
@@ -73,9 +76,11 @@ public abstract class Enemy extends Sprite {
 		}
 		
 		if (goingRight) {
-			if (body.getLinearVelocity().x <= 0.5) body.applyLinearImpulse(new Vector2(0.05f, 0), body.getWorldCenter(), true);
+			if (body.getLinearVelocity().x <= 0.5) 
+				body.applyLinearImpulse(new Vector2(0.05f, 0), body.getWorldCenter(), true);
 		} else {
-			if (body.getLinearVelocity().x >= -0.5) body.applyLinearImpulse(new Vector2(-0.05f, 0), body.getWorldCenter(), true);
+			if (body.getLinearVelocity().x >= -0.5)
+				body.applyLinearImpulse(new Vector2(-0.05f, 0), body.getWorldCenter(), true);
 		}
 	}
 	
@@ -91,6 +96,16 @@ public abstract class Enemy extends Sprite {
 			kill = true;
 	}
 	
+	public void seek(Vector2 target) {
+		Vector2 desired = target.cpy().sub(this.body.getPosition());
+		desired.nor();
+		desired.scl(maxSpeed);
+		
+		Vector2 force = desired.sub(velocity);
+		force.limit(maxForce);
+		body.applyLinearImpulse(force, body.getWorldCenter(), true);
+	}
+	
 	public void draw(SpriteBatch batch) {
 		if(!isDead) {
 			super.draw(batch);
@@ -98,10 +113,11 @@ public abstract class Enemy extends Sprite {
 		}
 	}
 	
-	public void update(float delta) {
+	public void update(float delta, Vector2 target) {
 		if (!kill) {
 			stateTimer += delta;
-			checkChange();
+			seek(target);
+			//checkChange();
 			setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
 			setRegion(getFrame(delta));
 		}

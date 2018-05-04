@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dom.forti2d.items.Gun;
 import com.dom.forti2d.sprites.Player;
@@ -33,7 +32,7 @@ public class Bullet extends Sprite {
 		this.x = x;
 		this.y = y;
 		this.gun = gun;
-		this.lifeTime = 1;
+		this.lifeTime = 2;
 		
 		x += .3f;
 		y  -= .02f;
@@ -49,8 +48,8 @@ public class Bullet extends Sprite {
 		setBounds(getX(), getY(), width / Constants.SCALE, height / Constants.SCALE);
 		setPosition(x, y);
 		
-		this.body = BodyBuilder.createBox(world, BodyType.DynamicBody, x * Constants.SCALE, y * Constants.SCALE, width, height, cBits, mBits, this);	
-		this.body.setGravityScale(0);
+		this.body = BodyBuilder.makeBullet(world, x * Constants.SCALE, y * Constants.SCALE, width, height, cBits, mBits, this, player.runningRight);	
+		this.body.setGravityScale(.005f);
 		this.body.setLinearVelocity(dx, 0);
 	}
 	

@@ -7,6 +7,7 @@ import com.dom.forti2d.hud.HUDObject;
 import com.dom.forti2d.items.Pistol;
 import com.dom.forti2d.items.Rifle;
 import com.dom.forti2d.items.RocketLauncher;
+import com.dom.forti2d.items.Sheild;
 import com.dom.forti2d.sprites.Player;
 
 public class Level1 extends Level {
@@ -27,6 +28,7 @@ public class Level1 extends Level {
 		this.created = true;
 		this.changedScreen = false;
 		
+		player.addItem(new Sheild(), 0);
 		player.addItem(new RocketLauncher(0, "RocketLauncher"), 1);
 		player.addItem(new Pistol(2, "Pistol"), 3);
 		player.addItem(new RocketLauncher(1, "RocketLauncher"), 2);
@@ -44,6 +46,9 @@ public class Level1 extends Level {
 			player.getAmmo()[0]++;
 			player.getAmmo()[1]++;
 			player.getAmmo()[2]++;
+			player.getAmmo()[3]++;
+			player.getAmmo()[4]++;
+			player.decrementHealth(.3f);
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.R)) {
