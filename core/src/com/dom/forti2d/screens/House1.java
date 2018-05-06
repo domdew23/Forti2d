@@ -27,5 +27,4 @@ public class House1 extends Level {
 			game.setScreen(level);
 		}
 	}
-	
 }

@@ -14,29 +14,36 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-
 import com.dom.forti2d.GameMain;
 import com.dom.forti2d.bullets.Explosion;
 import com.dom.forti2d.hud.AmmoDisplay;
 import com.dom.forti2d.hud.HUDObject;
 import com.dom.forti2d.hud.HealthDisplay;
 import com.dom.forti2d.hud.SlotsDisplay;
+import com.dom.forti2d.items.Health;
+import com.dom.forti2d.items.Item;
+import com.dom.forti2d.items.Pistol;
+import com.dom.forti2d.items.Rifle;
+import com.dom.forti2d.items.RocketLauncher;
+import com.dom.forti2d.items.Sheild;
 import com.dom.forti2d.listeners.CollisionListener;
 import com.dom.forti2d.objects.Doors;
 import com.dom.forti2d.objects.Ground;
 import com.dom.forti2d.objects.Obstacles;
 import com.dom.forti2d.objects.Platforms;
-import com.dom.forti2d.sprites.BlueElite;
 import com.dom.forti2d.sprites.Enemy;
 import com.dom.forti2d.sprites.Grunt;
 import com.dom.forti2d.sprites.Player;
-import com.dom.forti2d.sprites.RedElite;
 import com.dom.forti2d.tools.Constants;
+import com.dom.forti2d.tools.ItemSpawner;
 
 public abstract class Level implements Screen {
 	
 	public static CopyOnWriteArrayList<Explosion> explosions;
-	
+	protected CopyOnWriteArrayList<Item> items;
+	protected CopyOnWriteArrayList<Enemy> enemies;
+	protected ArrayList<HUDObject> hud;
+
 	protected GameMain game;
 	protected World world;
 	private Box2DDebugRenderer debug;
@@ -49,9 +56,8 @@ public abstract class Level implements Screen {
 	private final float xUpperBound=36.4f, xLowerBound=2;
 	private final String mapName;
 	
-	protected CopyOnWriteArrayList<Enemy> enemies;
 	
-	protected ArrayList<HUDObject> hud;
+	
 	
 	public Level(GameMain game, String mapName) { 
 		this.game = game;
@@ -61,6 +67,7 @@ public abstract class Level implements Screen {
 		this.mapName = mapName;
 		this.hud = new ArrayList<HUDObject>();
 		this.enemies = new CopyOnWriteArrayList<Enemy>();
+		this.items = ItemSpawner.spawnItems(world, 500f, 3800f);
 		explosions = new CopyOnWriteArrayList<Explosion>();
 		
 		loadCamera();
@@ -133,6 +140,28 @@ public abstract class Level implements Screen {
 		if (player.body.getPosition().x > xLowerBound && player.body.getPosition().x < xUpperBound) camera.position.x = player.body.getPosition().x;
 		camera.update();
 		player.update(delta);
+		
+		if (Gdx.input.isKeyJustPressed(Keys.F)) {
+			Item closest = null;
+			float distance = Float.MAX_VALUE;
+			float tmpDistance = 0;
+			
+			for (Item item : items) {
+				tmpDistance = Math.abs(player.body.getPosition().x - item.body.getPosition().x);
+				if (tmpDistance < distance) {
+					closest = item;
+					distance = tmpDistance; 
+				}
+			}
+			
+			float yDistance = Math.abs(player.body.getPosition().y - closest.body.getPosition().y);
+			
+			if (distance < .3 && yDistance < .25) {
+				Item droppedItem = player.pickUp(closest);
+				if (droppedItem != null)
+					items.add(determineItemType(droppedItem).setWasDropped());
+			}
+		}
 				
 		for (HUDObject h : hud)
 			h.update();
@@ -164,6 +193,18 @@ public abstract class Level implements Screen {
 		
 		game.batch.begin();
 		
+		for (Item item : items) {
+			if (item.isPickedUp && !world.isLocked()) {
+				if (!item.isDestroyed){
+					world.destroyBody(item.body);
+					item.isDestroyed = true;
+					items.remove(item);
+				}
+			} else {
+				item.draw(game.batch);
+			}
+		}
+		
 		for (Enemy e : enemies)
 			e.draw(game.batch);
 		
@@ -182,6 +223,25 @@ public abstract class Level implements Screen {
 		handleInput(delta);
     	update(delta);
     	draw(delta);
+	}
+	
+	private Item determineItemType(Item item) {
+		float x = player.body.getPosition().x * 100;
+		float y = player.body.getPosition().y * 100;
+		
+		if (item instanceof Health)
+			return new Health(world, x, y).setCount(item.getCount());
+		else if (item instanceof Sheild)
+			return new Sheild(world, x, y).setCount(item.getCount());
+		else if (item instanceof Pistol)
+			return new Pistol(world, x, y, item.getTier(), item.getItem());
+		else if (item instanceof Rifle)
+			return new Rifle(world, x, y, item.getTier(), item.getItem());
+		else if (item instanceof RocketLauncher)
+			return new RocketLauncher(world, x, y, item.getTier(), item.getItem());
+		else
+			return null;
+
 	}
 
 	public void resize(int width, int height) {
@@ -205,6 +265,7 @@ public abstract class Level implements Screen {
 		renderer.dispose();
 		map.dispose();
 		debug.dispose();
+		
 		for (HUDObject h : hud)
 			h.dispose();
 	}

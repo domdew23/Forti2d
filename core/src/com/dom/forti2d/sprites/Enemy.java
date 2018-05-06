@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dom.forti2d.bullets.Bullet;
 import com.dom.forti2d.items.Gun;
+import com.dom.forti2d.tools.AI;
 import com.dom.forti2d.tools.BodyBuilder;
 import com.dom.forti2d.tools.Constants;
 
@@ -71,9 +72,8 @@ public abstract class Enemy extends Sprite {
 	}
 	
 	protected void checkChange() {		
-		if(++count % 150 == 0) {
+		if(++count % 150 == 0)
 			changeDirection();
-		}
 		
 		if (goingRight) {
 			if (body.getLinearVelocity().x <= 0.5) 
@@ -86,11 +86,10 @@ public abstract class Enemy extends Sprite {
 	
 	public void decrementHealth(float delta) {
 		float tmp = health;
-		if (tmp - delta >= 0) {
+		if (tmp - delta >= 0)
 			health -= delta;
-		} else {
+		else
 			health = 0;
-		}
 		
 		if (health <= 0)
 			kill = true;
@@ -116,8 +115,10 @@ public abstract class Enemy extends Sprite {
 	public void update(float delta, Vector2 target) {
 		if (!kill) {
 			stateTimer += delta;
-			seek(target);
-			//checkChange();
+			Vector2 force = AI.seek(body, target);
+			force.y = 0;
+			
+			//body.applyLinearImpulse(force, body.getWorldCenter(), true);
 			setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
 			setRegion(getFrame(delta));
 		}

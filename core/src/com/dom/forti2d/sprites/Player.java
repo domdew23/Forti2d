@@ -14,6 +14,7 @@ import com.dom.forti2d.bullets.PistolBullet;
 import com.dom.forti2d.bullets.RifleBullet;
 import com.dom.forti2d.bullets.RocketBullet;
 import com.dom.forti2d.items.BlankItem;
+import com.dom.forti2d.items.BulletItem;
 import com.dom.forti2d.items.Gun;
 import com.dom.forti2d.items.Health;
 import com.dom.forti2d.items.Item;
@@ -326,15 +327,116 @@ public class Player extends Sprite {
 		}
 	}
 	
-	public void addItem(Item item, int currentSlot) {
-		if (currentSlot == -1)
-			inventory[inventoryCount++] = item;
-		else
-			inventory[currentSlot] = item;
+	public Item pickUp(Item item) {
+		Item droppedItem = null;
+		
+		if (item instanceof Health) {
+			if (invContainsHealth() && ammo[3] < 5) {
+				int tmp = ammo[3] + item.getCount();
+				if (tmp >= 5) {
+					item.setCount(tmp - 5);
+					ammo[3] = 5;
+				} else {
+					ammo[3] += item.getCount();
+				}
+				item.isPickedUp = true;
+				return droppedItem;
+			}
+		} else if (item instanceof Sheild) {
+			if (invContainsSheild() && ammo[4] < 5) {
+				int tmp = ammo[4] + item.getCount();
+				if (tmp >= 5) {
+					item.setCount(tmp - 5);
+					ammo[4] = 5;
+				} else {
+					ammo[4] += item.getCount();
+				}
+				item.isPickedUp = true;
+				return droppedItem;
+			}
+		}
+		
+		if (item instanceof BulletItem) {
+			addAmmo(item);
+		} else if (inventory[currentSlot] instanceof BlankItem) {
+			addItem(item, currentSlot);
+		} else if (inventoryCount == 5){
+			droppedItem = inventory[currentSlot];
+			dropItem(droppedItem);
+			addItem(item, currentSlot);
+		} else {
+			int openSlot = findOpenSlot();
+			addItem(item, openSlot);
+		}
+		item.isPickedUp = true;
+		return droppedItem;
 	}
 	
-	public void dropItem() {
+	public void addItem(Item item, int slot) {
+		inventory[slot] = item;
+				
+		if (!item.wasDropped) {
+			if (item instanceof Pistol)
+				ammo[0] += 28;
+			else if (item instanceof Rifle)
+				ammo[1] += 48;
+			else if (item instanceof RocketLauncher)
+				ammo[2] += 6;
+		}
+		
+		if (item instanceof Health)
+			ammo[3] += item.getCount();
+		else if (item instanceof Sheild)
+			ammo[4] += item.getCount();
+		
+		inventoryCount++;
+	}
+	
+	private void addAmmo(Item item) {
+		if (item.getItem().equals("Pistol"))
+			ammo[0] += 12;
+		else if (item.getItem().equals("Rifle"))
+			ammo[1] += 10;
+		else if (item.getItem().equals("RocketLauncher"))
+			ammo[2] += 4;
+		item.isPickedUp = true;
+	}
+	
+	public void dropItem(Item item) {
 		inventory[currentSlot] = new BlankItem();
+		inventoryCount--;
+		
+		if (item instanceof Health) {
+			item.setCount(ammo[3]);
+			ammo[3] = 0;
+		} else if (item instanceof Sheild) {
+			item.setCount(ammo[4]);
+			ammo[4] = 0;
+		}
+	}
+	
+	private int findOpenSlot() {
+		for (int i = 0; i < inventory.length; i++) {
+			if (inventory[i] instanceof BlankItem)
+				return i;
+		}
+		return -1;
+	}
+	
+	private boolean invContainsHealth() {
+		for (int i = 0; i < inventory.length; i++) {
+			if (inventory[i] instanceof Health)
+				return true;
+		}
+		return false;
+	}
+	
+	private boolean invContainsSheild() {
+		for (int i = 0; i < inventory.length; i++) {
+			if (inventory[i] instanceof Sheild)
+				return true;
+		}
+		return false;
 	}
 	
 	public Item[] getInventory() {
@@ -393,7 +495,7 @@ public class Player extends Sprite {
 			setWeapon(3);
 		else
 			setWeapon(0);
-		
+				
 		inventory[currentSlot].setEquipped();
 		
 		for (Bullet b : bullets) {

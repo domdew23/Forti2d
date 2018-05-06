@@ -35,6 +35,10 @@ public class Drawables {
 	private static TextureRegionDrawable blueRocketLauncher = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/guns/blueRocketLauncher.png")));
 	private static TextureRegionDrawable goldRocketLauncher = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/guns/goldRocketLauncher.png")));
 	
+	private static TextureRegionDrawable pistolBullets = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/ammoDisplay/pistolBullet.png")));
+	private static TextureRegionDrawable rifleBullets = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/ammoDisplay/rifleBullet.png")));
+	private static TextureRegionDrawable rocketBullets = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/ammoDisplay/rocketBullet.png")));
+
 	private static TextureRegionDrawable health = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/health.png")));
 	private static TextureRegionDrawable sheild = new TextureRegionDrawable(new TextureRegion(new Texture("sprites/sheild.png")));
 		
@@ -78,33 +82,44 @@ public class Drawables {
 	
 	public static TextureRegionDrawable getItem(int tier, String item) {
 		switch (tier) {
+			case -1:
+				if (item.equals("Pistol"))
+					return pistolBullets;
+				else if (item.equals("Rifle"))
+					return rifleBullets;
+				else if (item.equals("RocketLauncher"))
+					return rocketBullets;
 			case 0:
 				if (item.equals("Pistol"))
 					return greyPistol;
-				if (item.equals("Rifle"))
+				else if (item.equals("Rifle"))
 					return greyRifle;
-				if (item.equals("RocketLauncher"))
+				else if (item.equals("RocketLauncher"))
 					return greyRocketLauncher;
 			case 1:
 				if (item.equals("Pistol"))
 					return redPistol;
-				if (item.equals("Rifle"))
+				else if (item.equals("Rifle"))
 					return redRifle;
-				if (item.equals("RocketLauncher"))
+				else if (item.equals("RocketLauncher"))
 					return redRocketLauncher;
+				else if (item.equals("Health"))
+					return health;
 			case 2:
 				if (item.equals("Pistol"))
 					return bluePistol;
-				if (item.equals("Rifle"))
+				else if (item.equals("Rifle"))
 					return blueRifle;
-				if (item.equals("RocketLauncher"))
+				else if (item.equals("RocketLauncher"))
 					return blueRocketLauncher;
+				else if (item.equals("Sheild"))
+					return sheild;
 			case 3:
 				if (item.equals("Pistol"))
 					return goldPistol;
-				if (item.equals("Rifle"))
+				else if (item.equals("Rifle"))
 					return goldRifle;
-				if (item.equals("RocketLauncher"))
+				else if (item.equals("RocketLauncher"))
 					return goldRocketLauncher;
 			default:
 				return null;

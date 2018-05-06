@@ -1,11 +1,12 @@
 package com.dom.forti2d.items;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class Rifle extends Gun {
 
-	public Rifle(int tier, String item) {
-		super(tier, item);
+	public Rifle(World world, float x, float y, int tier, String item) {
+		super(world, x, y, tier, item);
 		setDamage();
 	}
 

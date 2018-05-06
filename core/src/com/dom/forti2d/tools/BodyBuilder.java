@@ -101,9 +101,31 @@ public class BodyBuilder {
 		return body;
 	}
 	
+	public static Body createCircle(World world, BodyType type, float x, float y, float radius, byte cBits, byte mBits, Object userData) {
+		Body body;
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.position.set(x / Constants.SCALE, y / Constants.SCALE);
+		bodyDef.type = type;
+		body = world.createBody(bodyDef);
+		
+		FixtureDef fixDef = new FixtureDef();
+		CircleShape shape = new CircleShape();
+		shape.setRadius(radius / Constants.SCALE);
+		fixDef.shape = shape;
+		fixDef.filter.categoryBits = cBits;
+		fixDef.filter.maskBits = mBits;
+		body.createFixture(fixDef).setUserData(userData);
+		
+		return body;
+	}
+	
 	
 	public static Body makeCharacterBody(World world, float x, float y, float radius, Object userData) {
 		return createCircle(world, Constants.DYNAMIC_BODY, x, y, radius, userData);
+	}
+	
+	public static Body makeItemBody(World world, float x, float y, float radius, byte cBits, byte mBits, Object userData) {
+		return createCircle(world, Constants.DYNAMIC_BODY, x, y, radius, cBits, mBits, userData);
 	}
 	
 	public static Body makeBullet(World world, float x, float y, float width, float height, byte cBits, byte mBits, Object userData, boolean flipped) {
