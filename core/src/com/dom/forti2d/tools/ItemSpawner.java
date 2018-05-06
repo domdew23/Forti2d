@@ -14,12 +14,12 @@ import com.dom.forti2d.items.Sheild;
 
 public class ItemSpawner {
 	
-	private static int pistolSpawnRate = 0;//15;
-	private static int rifleSpawnRate = pistolSpawnRate + 0;//10;
-	private static int rocketLauncherSpawnRate = rifleSpawnRate + 40;//5;
+	private static int pistolSpawnRate = 15;
+	private static int rifleSpawnRate = pistolSpawnRate + 10;
+	private static int rocketLauncherSpawnRate = rifleSpawnRate + 5;
 	private static int healthSpawnRate = rocketLauncherSpawnRate + 20;
 	private static int sheildSpawnRate = healthSpawnRate + 40;
-	private static int ammoSpawnRate = sheildSpawnRate + 0;//30;
+	private static int ammoSpawnRate = sheildSpawnRate + 30;
 	
 	private static int greyTierSpawnRate = 50;
 	private static int redTierSpawnRate = greyTierSpawnRate + 25;
@@ -42,7 +42,7 @@ public class ItemSpawner {
 		int offset = Math.round((max - min) / numItems);
 		
 		for (int x = Math.round(min), i = 0; i < numItems; i++, x+=offset) {
-			if (ThreadLocalRandom.current().nextDouble() <= 1) {
+			if (ThreadLocalRandom.current().nextDouble() <= .75) {
 				int itemID = possibleItems[ThreadLocalRandom.current().nextInt(100)];
 				int tierID = possibleTiers[ThreadLocalRandom.current().nextInt(100)];
 				if (itemID == 0 || itemID == 1 || itemID == 2)

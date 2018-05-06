@@ -1,7 +1,5 @@
 package com.dom.forti2d.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.dom.forti2d.GameMain;
 import com.dom.forti2d.hud.HUDObject;
 import com.dom.forti2d.sprites.Player;
@@ -23,26 +21,9 @@ public class Level1 extends Level {
 		this.lastY = player.body.getPosition().y;
 		this.created = true;
 		this.changedScreen = false;
-		
-		
-		//player.addItem(new Sheild(), 0);
-		//player.addItem(new RocketLauncher(0, "RocketLauncher"), 1);
-		//player.addItem(new Pistol(2, "Pistol"), 3);
-		//player.addItem(new RocketLauncher(1, "RocketLauncher"), 2);
-		//player.addItem(new Rifle(3, "Rifle"), 4);
 
 		for (HUDObject h : hud)
 			h.setPlayer(player);
-	}
-	
-	protected void handleInput(float delta) {
-		super.handleInput(delta);
-		super.checkEquipmentChange(delta);
-		
-		if (Gdx.input.isKeyJustPressed(Keys.R)) {
-			player.shoot();
-		}
-		
 	}
 	
 	protected void update(float delta) {

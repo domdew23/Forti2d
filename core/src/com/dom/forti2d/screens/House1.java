@@ -21,7 +21,6 @@ public class House1 extends Level {
 	
 	protected void handleInput(float delta) {
 		super.handleInput(delta);
-		super.checkEquipmentChange(delta);
 		
 		if (Gdx.input.isKeyJustPressed(Keys.X)) {
 			game.setScreen(level);

@@ -95,16 +95,6 @@ public abstract class Enemy extends Sprite {
 			kill = true;
 	}
 	
-	public void seek(Vector2 target) {
-		Vector2 desired = target.cpy().sub(this.body.getPosition());
-		desired.nor();
-		desired.scl(maxSpeed);
-		
-		Vector2 force = desired.sub(velocity);
-		force.limit(maxForce);
-		body.applyLinearImpulse(force, body.getWorldCenter(), true);
-	}
-	
 	public void draw(SpriteBatch batch) {
 		if(!isDead) {
 			super.draw(batch);

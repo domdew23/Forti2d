@@ -103,7 +103,7 @@ public class Player extends Sprite {
 		this.rocketLauncherEquipped = false;
 		this.stateTimer = 0;
 		this.health = 1;
-		this.sheild = 1;
+		this.sheild = 0;
 		this.ammo = new int[] {0, 0, 0, 0, 0};
 		this.inventory = new Item[]{new BlankItem(), new BlankItem(), new BlankItem(), new BlankItem(), new BlankItem()};
 		this.bullets = new CopyOnWriteArrayList<Bullet>();
@@ -309,14 +309,13 @@ public class Player extends Sprite {
 			incrementHealth(.15f);
 			ammo[3]--;
 			if (ammo[3] == 0)
-				inventory[currentSlot] = new BlankItem();
+				dropItem(inventory[currentSlot], true);
 		} else if (inventory[currentSlot] instanceof Sheild && sheild != 1 && ammo[4] != 0){
 			incrementSheild(.25f);
 			ammo[4]--;
 			if (ammo[4] == 0)
-				inventory[currentSlot] = new BlankItem();
+				dropItem(inventory[currentSlot], true);
 		}
-
 	}
 	
 	public void clearEquipped(int equipped) {
@@ -355,14 +354,14 @@ public class Player extends Sprite {
 				return droppedItem;
 			}
 		}
-		
+				
 		if (item instanceof BulletItem) {
 			addAmmo(item);
 		} else if (inventory[currentSlot] instanceof BlankItem) {
 			addItem(item, currentSlot);
 		} else if (inventoryCount == 5){
 			droppedItem = inventory[currentSlot];
-			dropItem(droppedItem);
+			dropItem(droppedItem, false);
 			addItem(item, currentSlot);
 		} else {
 			int openSlot = findOpenSlot();
@@ -402,16 +401,18 @@ public class Player extends Sprite {
 		item.isPickedUp = true;
 	}
 	
-	public void dropItem(Item item) {
+	public void dropItem(Item item, boolean used) {
 		inventory[currentSlot] = new BlankItem();
 		inventoryCount--;
 		
-		if (item instanceof Health) {
-			item.setCount(ammo[3]);
-			ammo[3] = 0;
-		} else if (item instanceof Sheild) {
-			item.setCount(ammo[4]);
-			ammo[4] = 0;
+		if (!used) {
+			if (item instanceof Health) {
+				item.setCount(ammo[3]);
+				ammo[3] = 0;
+			} else if (item instanceof Sheild) {
+				item.setCount(ammo[4]);
+				ammo[4] = 0;
+			}
 		}
 	}
 	
@@ -437,6 +438,10 @@ public class Player extends Sprite {
 				return true;
 		}
 		return false;
+	}
+	
+	public void setWorld(World world) {
+		this.world = world;
 	}
 	
 	public Item[] getInventory() {

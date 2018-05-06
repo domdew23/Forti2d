@@ -56,9 +56,6 @@ public abstract class Level implements Screen {
 	private final float xUpperBound=36.4f, xLowerBound=2;
 	private final String mapName;
 	
-	
-	
-	
 	public Level(GameMain game, String mapName) { 
 		this.game = game;
 		this.world = new World(new Vector2(0, -9.81f), true);
@@ -69,7 +66,6 @@ public abstract class Level implements Screen {
 		this.enemies = new CopyOnWriteArrayList<Enemy>();
 		this.items = ItemSpawner.spawnItems(world, 500f, 3800f);
 		explosions = new CopyOnWriteArrayList<Explosion>();
-		
 		loadCamera();
 		loadMap();
 		loadObjects();
@@ -102,6 +98,7 @@ public abstract class Level implements Screen {
 	}
 	
 	public void show() {
+		player.setWorld(world);
 	}
 	
 	protected void handleInput(float delta) {
@@ -111,6 +108,12 @@ public abstract class Level implements Screen {
 			player.body.applyLinearImpulse(new Vector2(.1f, 0), player.body.getWorldCenter(), true);
 		if (Gdx.input.isKeyJustPressed(Keys.SPACE) && player.isNotJumping())
 			player.body.applyLinearImpulse(new Vector2(0, 4f), player.body.getWorldCenter(), true);
+		
+		checkEquipmentChange(delta);
+		
+		if (Gdx.input.isKeyJustPressed(Keys.R)) {
+			player.shoot();
+		}
 	}
 	
 	protected void checkEquipmentChange(float delta) {	
