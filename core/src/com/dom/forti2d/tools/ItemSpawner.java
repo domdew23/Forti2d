@@ -18,8 +18,8 @@ public class ItemSpawner {
 	private static int rifleSpawnRate = pistolSpawnRate + 10;
 	private static int rocketLauncherSpawnRate = rifleSpawnRate + 5;
 	private static int healthSpawnRate = rocketLauncherSpawnRate + 20;
-	private static int sheildSpawnRate = healthSpawnRate + 40;
-	private static int ammoSpawnRate = sheildSpawnRate + 30;
+	private static int sheildSpawnRate = healthSpawnRate + 20;
+	private static int ammoSpawnRate = sheildSpawnRate + 40;
 	
 	private static int greyTierSpawnRate = 50;
 	private static int redTierSpawnRate = greyTierSpawnRate + 25;
@@ -32,12 +32,13 @@ public class ItemSpawner {
 	
 	private static int numItems = 16;
 	private static float y = 100f;
+	
+	public static int[] possibleItems = initItemSpawnRates();
+	public static int[] possibleTiers = initTierSpawnRates();
+	public static int[] possibleAmmo = initAmmoSpawnRates();
 
 	public static CopyOnWriteArrayList<Item> spawnItems(World world, float min, float max){
 		CopyOnWriteArrayList<Item> items = new CopyOnWriteArrayList<Item>();
-		int[] possibleItems = initItemSpawnRates();
-		int[] possibleTiers = initTierSpawnRates();
-		int[] possibleAmmo = initAmmoSpawnRates();
 
 		int offset = Math.round((max - min) / numItems);
 		
@@ -45,15 +46,21 @@ public class ItemSpawner {
 			if (ThreadLocalRandom.current().nextDouble() <= .75) {
 				int itemID = possibleItems[ThreadLocalRandom.current().nextInt(100)];
 				int tierID = possibleTiers[ThreadLocalRandom.current().nextInt(100)];
-				if (itemID == 0 || itemID == 1 || itemID == 2)
-					items.add(getGun(world, itemID, tierID, x));
-				else if (itemID == 3 || itemID == 4)
-					items.add(getHeal(world, itemID, x));
-				else
-					items.add(getAmmo(world, possibleAmmo, x));
+				
+				items.add(getItem(world, itemID, tierID, x, y));
 			}
 		}
 		return items;
+	}
+	
+	public static Item getItem(World world, int itemID, int tierID, float x, float y) {
+		if (itemID == 0 || itemID == 1 || itemID == 2)
+			return getGun(world, itemID, tierID, x, y);
+		else if (itemID == 3 || itemID == 4)
+			return getHeal(world, itemID, x, y);
+		else
+			return getAmmo(world, x, y);
+		
 	}
 	
 	private static int[] initItemSpawnRates() {
@@ -109,7 +116,7 @@ public class ItemSpawner {
 		return possibleAmmo;
 	}
 	
-	private static Item getGun(World world, int itemID, int tier, float x) {
+	private static Item getGun(World world, int itemID, int tier, float x, float y) {
 		switch (itemID) {
 			case 0:
 				return new Pistol(world, x, y, tier, "Pistol");
@@ -122,7 +129,7 @@ public class ItemSpawner {
 		}
 	}
 	
-	private static Item getHeal(World world, int itemID, float x) {
+	private static Item getHeal(World world, int itemID, float x, float y) {
 		switch (itemID) {
 			case 3:
 				return new Health(world, x, y);
@@ -133,7 +140,7 @@ public class ItemSpawner {
 		}
 	}
 	
-	private static Item getAmmo(World world, int[] possibleAmmo, float x) {
+	private static Item getAmmo(World world, float x, float y) {
 		int itemID = possibleAmmo[ThreadLocalRandom.current().nextInt(100)];
 		switch (itemID) {
 			case 0:

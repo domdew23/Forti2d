@@ -2,6 +2,7 @@ package com.dom.forti2d.screens;
 
 import com.dom.forti2d.GameMain;
 import com.dom.forti2d.hud.HUDObject;
+import com.dom.forti2d.objects.NonInteractive;
 import com.dom.forti2d.sprites.Player;
 
 public class Level1 extends Level {
@@ -21,6 +22,8 @@ public class Level1 extends Level {
 		this.lastY = player.body.getPosition().y;
 		this.created = true;
 		this.changedScreen = false;
+		
+		NonInteractive.storeMaps();
 
 		for (HUDObject h : hud)
 			h.setPlayer(player);
@@ -41,6 +44,7 @@ public class Level1 extends Level {
 	
 	public void show() {
 		super.show();
+		NonInteractive.restoreMaps();
 		if (!created) 
 			this.player.createBody(world, lastX * 100, lastY * 100);
 	}

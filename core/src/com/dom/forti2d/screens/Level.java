@@ -2,6 +2,7 @@ package com.dom.forti2d.screens;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -29,6 +30,7 @@ import com.dom.forti2d.items.Sheild;
 import com.dom.forti2d.listeners.CollisionListener;
 import com.dom.forti2d.objects.Doors;
 import com.dom.forti2d.objects.Ground;
+import com.dom.forti2d.objects.NonInteractive;
 import com.dom.forti2d.objects.Obstacles;
 import com.dom.forti2d.objects.Platforms;
 import com.dom.forti2d.sprites.Enemy;
@@ -66,6 +68,7 @@ public abstract class Level implements Screen {
 		this.enemies = new CopyOnWriteArrayList<Enemy>();
 		this.items = ItemSpawner.spawnItems(world, 500f, 3800f);
 		explosions = new CopyOnWriteArrayList<Explosion>();
+		NonInteractive.clearMaps();
 		loadCamera();
 		loadMap();
 		loadObjects();
@@ -176,6 +179,9 @@ public abstract class Level implements Screen {
 			e.update(delta, player.body.getPosition());
 			if (e.kill && !world.isLocked()) {
 				if (!e.isDead) {
+					float x = e.body.getPosition().x * 100;
+					float y = (e.body.getPosition().y * 100) + 10;
+					items.add(ItemSpawner.getItem(world, ItemSpawner.possibleItems[ThreadLocalRandom.current().nextInt(100)], ItemSpawner.possibleTiers[ThreadLocalRandom.current().nextInt(100)], x, y));
 					world.destroyBody(e.body);
 					e.isDead = true;
 					enemies.remove(e);

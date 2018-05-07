@@ -15,8 +15,10 @@ public class House1 extends Level {
 		this.level = level;
 		this.player = player;
 		this.player.createBody(world, 62f, 32f);
+		
 		for (HUDObject h : hud)
 			h.setPlayer(player);
+
 	}
 	
 	protected void handleInput(float delta) {
