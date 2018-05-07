@@ -25,4 +25,5 @@
  <objectgroup name="Doors">
   <object id="18" x="1520" y="96" width="96" height="96"/>
  </objectgroup>
+ <objectgroup name="Final Door"/>
 </map>

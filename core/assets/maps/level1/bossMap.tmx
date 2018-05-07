@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="25" height="13" tilewidth="16" tileheight="16" infinite="0" nextobjectid="6">
+ <tileset firstgid="1" source="batch-2.tsx"/>
+ <tileset firstgid="3601" source="batch-1.tsx"/>
+ <layer name="Background" width="25" height="13">
+  <data encoding="base64" compression="zlib">
+   eJzbzMPAsHkUj+JRPIpHMRgDAKtD8nw=
+  </data>
+ </layer>
+ <layer name="In Ground" width="25" height="13">
+  <data encoding="base64" compression="zlib">
+   eJy7wsdwgAEKfPkZGPz4GTAAsjghNejyM/jA+ACmDuqBK3xgTFM7Rv1BPBj1B/FgqPtDGWi2Ch/CH/JAWoGPunbEA81LgPgBDKKBdAyV7ZgNNG8OFAMAnskjZw==
+  </data>
+ </layer>
+ <layer name="Graphics" width="25" height="13">
+  <data encoding="base64" compression="zlib">
+   eJxbLsjAsAKI0cFKoNgqLOLIQF6IgUFBCLucIlBcCYccLQAvPwMDHz9taU8g9qIxPQpGwSjADbikGBi4gZgHiHmlaMMHAKUmEsU=
+  </data>
+ </layer>
+ <objectgroup name="Ground">
+  <object id="1" x="0" y="192" width="416" height="16"/>
+  <object id="3" x="0.5" y="-0.75" width="2.75" height="192.75"/>
+  <object id="5" x="396.333" y="0.333333" width="3.33333" height="190.667"/>
+ </objectgroup>
+ <objectgroup name="Platforms"/>
+ <objectgroup name="Doors"/>
+ <objectgroup name="Final Door"/>
+</map>

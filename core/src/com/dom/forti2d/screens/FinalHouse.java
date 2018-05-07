@@ -5,19 +5,22 @@ import com.badlogic.gdx.Input.Keys;
 import com.dom.forti2d.GameMain;
 import com.dom.forti2d.hud.HUDObject;
 import com.dom.forti2d.sprites.Player;
+import com.dom.forti2d.tools.EnemySpawner;
 
-public class House1 extends Level {
-	
+public class FinalHouse extends Level {
 	private Level level;
 	
-	public House1(GameMain game, Level level, Player player) {
-		super(game, "maps/level1/house1.tmx");
+	public FinalHouse(GameMain game, Level level, Player player) {
+		super(game, "maps/level1/bossMap.tmx");
+		this.xUpperBound = 2.0f;
 		this.level = level;
 		this.player = player;
 		this.player.createBody(world, 62f, 32f);
-		this.xUpperBound = 14.6f;
+		
 		for (HUDObject h : hud)
 			h.setPlayer(player);
+		
+		enemies = EnemySpawner.getBoss(world, enemies);
 
 	}
 	

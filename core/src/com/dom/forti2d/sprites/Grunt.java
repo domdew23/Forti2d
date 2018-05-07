@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 public class Grunt extends Enemy {
 	
 	public Grunt(World world, float x, float y) {
-		super(world, x, y);
+		super(world, x, y, "character");
 		this.health = 1f;
 		this.healthBarSize = .2f / health;
 	}

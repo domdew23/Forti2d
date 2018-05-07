@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -113,11 +114,14 @@ public class Player extends Sprite {
 		setAnimations();
 		
 		setBounds(0, 0, 20 / Constants.SCALE, 20 / Constants.SCALE);
+		//setBounds(0, 0, 36 / Constants.SCALE, 35 / Constants.SCALE);
+
 		setRegion(idleNoGun);
 	}
 	
 	private void setTextures() {
 		idleNoGun = new TextureRegion(getTexture(), sixthFrameX, noGunY, spriteWidth, spriteHeight);
+
 		idlePistol = new TextureRegion(getTexture(), sixthFrameX, pistolY, spriteWidth, spriteHeight);
 		idleRifle = new TextureRegion(getTexture(), sixthFrameX, rifleY, spriteWidth, spriteHeight);
 		idleRocketLauncher = new TextureRegion(getTexture(), sixthFrameX + 2, rocketLauncherY, spriteWidth, spriteHeight);
@@ -177,19 +181,45 @@ public class Player extends Sprite {
 		TextureRegion region;
 		
 		switch(currentState) {
-			case IDLE_NO_GUN: region = idleNoGun; break;
-			case IDLE_PISTOL: region = idlePistol; break;
-			case IDLE_RIFLE: region = idleRifle; break;
-			case IDLE_ROCKET_LAUNCHER: region = idleRocketLauncher; break;
-			case RUNNING_NO_GUN: region = runningNoGun.getKeyFrame(stateTimer, true); break;
-			case RUNNING_PISTOL: region = runningPistol.getKeyFrame(stateTimer, true); break;
-			case RUNNING_RIFLE: region = runningRifle.getKeyFrame(stateTimer, true); break;
-			case RUNNING_ROCKET_LAUNCHER: region = runningRocketLauncher.getKeyFrame(stateTimer, true); break;
-			case JUMPING_NO_GUN: region = jumpingNoGun; break;
-			case JUMPING_PISTOL: region = jumpingPistol; break;
-			case JUMPING_RIFLE: region = jumpingRifle; break;
-			case JUMPING_ROCKET_LAUNCHER: region = jumpingRocketLauncher; break;
-			default: region = idleNoGun; break;
+			case IDLE_NO_GUN: 
+				region = idleNoGun; 
+				break;
+			case IDLE_PISTOL: 
+				region = idlePistol; 
+				break;
+			case IDLE_RIFLE: 
+				region = idleRifle; 
+				break;
+			case IDLE_ROCKET_LAUNCHER: 
+				region = idleRocketLauncher; 
+				break;
+			case RUNNING_NO_GUN: 
+				region = runningNoGun.getKeyFrame(stateTimer, true); 
+				break;
+			case RUNNING_PISTOL: 
+				region = runningPistol.getKeyFrame(stateTimer, true); 
+				break;
+			case RUNNING_RIFLE: 
+				region = runningRifle.getKeyFrame(stateTimer, true); 
+				break;
+			case RUNNING_ROCKET_LAUNCHER: 
+				region = runningRocketLauncher.getKeyFrame(stateTimer, true); 
+				break;
+			case JUMPING_NO_GUN: 
+				region = jumpingNoGun; 
+				break;
+			case JUMPING_PISTOL: 
+				region = jumpingPistol; 
+				break;
+			case JUMPING_RIFLE: 
+				region = jumpingRifle; 
+				break;
+			case JUMPING_ROCKET_LAUNCHER: 
+				region = jumpingRocketLauncher; 
+				break;
+			default: 
+				region = idleNoGun; 
+				break;
 		}
 		
 		if ((body.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()){
@@ -439,6 +469,14 @@ public class Player extends Sprite {
 	
 	public void gotShot(Bullet bullet) {
 		decrementHealth(bullet.getGun().getDamage());
+	}
+	
+	public void gotHit(Enemy enemy) {
+		if (enemy.walkingRight)
+			body.applyLinearImpulse(new Vector2(3f, 2f), body.getWorldCenter(), true);
+		else
+			body.applyLinearImpulse(new Vector2(-3f, 2f), body.getWorldCenter(), true);
+		decrementHealth(.1f);
 	}
 	
 	public void setWorld(World world) {

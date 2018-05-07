@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 public class RedElite extends Enemy {
 	
 	public RedElite(World world, float x, float y) {
-		super(world, x, y);
+		super(world, x, y, "character");
 		this.health = 3f;
 		this.healthBarSize = .2f / health;
 	}

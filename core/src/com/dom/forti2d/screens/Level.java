@@ -29,12 +29,13 @@ import com.dom.forti2d.items.RocketLauncher;
 import com.dom.forti2d.items.Sheild;
 import com.dom.forti2d.listeners.CollisionListener;
 import com.dom.forti2d.objects.Doors;
+import com.dom.forti2d.objects.FinalDoor;
 import com.dom.forti2d.objects.Ground;
+import com.dom.forti2d.objects.Interactive;
 import com.dom.forti2d.objects.NonInteractive;
-import com.dom.forti2d.objects.Obstacles;
 import com.dom.forti2d.objects.Platforms;
+import com.dom.forti2d.sprites.Boss;
 import com.dom.forti2d.sprites.Enemy;
-import com.dom.forti2d.sprites.Grunt;
 import com.dom.forti2d.sprites.Player;
 import com.dom.forti2d.tools.Constants;
 import com.dom.forti2d.tools.EnemySpawner;
@@ -54,9 +55,10 @@ public abstract class Level implements Screen {
 	private OrthogonalTiledMapRenderer renderer;
 	protected Player player;
 	
+	public static float playerX;
 	private OrthographicCamera camera;
 	
-	private final float xUpperBound=36.4f, xLowerBound=2;
+	protected float xUpperBound=36.4f, xLowerBound=2;
 	private final String mapName;
 	
 	public Level(GameMain game, String mapName) { 
@@ -68,9 +70,9 @@ public abstract class Level implements Screen {
 		this.hud = new ArrayList<HUDObject>();
 		this.enemies = new CopyOnWriteArrayList<Enemy>();
 		
-
 		explosions = new CopyOnWriteArrayList<Explosion>();
 		NonInteractive.clearMaps();
+		Interactive.clearMaps();
 		loadCamera();
 		loadMap();
 		loadObjects();
@@ -90,8 +92,8 @@ public abstract class Level implements Screen {
 	private void loadObjects() {	
 		new Ground(map, world);
 		new Platforms(map, world);
-		new Obstacles(map, world);
 		new Doors(map, world);
+		new FinalDoor(map, world);
 		
 		items = ItemSpawner.spawnItems(world, 500f, 3800f);
 		enemies = EnemySpawner.spawnEnemies(world, 500f, 3800f);
@@ -147,6 +149,7 @@ public abstract class Level implements Screen {
 		if (player.body.getPosition().x > xLowerBound && player.body.getPosition().x < xUpperBound) camera.position.x = player.body.getPosition().x;
 		camera.update();
 		player.update(delta);
+		playerX = player.body.getPosition().x;
 		
 		if (Gdx.input.isKeyJustPressed(Keys.F)) {
 			Item closest = null;
@@ -182,10 +185,15 @@ public abstract class Level implements Screen {
 				if (!e.isDead) {
 					float x = e.body.getPosition().x * 100;
 					float y = (e.body.getPosition().y * 100) + 10;
-					items.add(ItemSpawner.getItem(world, ItemSpawner.possibleItems[ThreadLocalRandom.current().nextInt(100)], ItemSpawner.possibleTiers[ThreadLocalRandom.current().nextInt(100)], x, y));
 					world.destroyBody(e.body);
 					e.isDead = true;
-					enemies.remove(e);
+					if (!(e instanceof Boss)) {
+						items.add(ItemSpawner.getItem(world, ItemSpawner.possibleItems[ThreadLocalRandom.current().nextInt(100)], ItemSpawner.possibleTiers[ThreadLocalRandom.current().nextInt(100)], x, y));
+						enemies.remove(e);
+					} else {
+						for (int i = 0; i < 6; i++)
+							items.add(ItemSpawner.getItem(world, ItemSpawner.possibleItems[ThreadLocalRandom.current().nextInt(100)], ItemSpawner.possibleTiers[ThreadLocalRandom.current().nextInt(100)], x += 8, y));
+					}
 				}
 			}
 		}
@@ -214,7 +222,7 @@ public abstract class Level implements Screen {
 				item.draw(game.batch);
 			}
 		}
-		
+				
 		for (Enemy e : enemies)
 			e.draw(game.batch);
 		

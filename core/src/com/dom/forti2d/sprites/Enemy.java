@@ -31,7 +31,7 @@ public abstract class Enemy extends Sprite {
 	
 	protected Vector2 velocity;
 	
-	private boolean walkingRight;
+	public boolean walkingRight;
 	private boolean goingRight;
 	
 	private int count;
@@ -45,8 +45,8 @@ public abstract class Enemy extends Sprite {
 	private World world;
 	private int shotCoolDown;
 	
-	public Enemy(World world, float x, float y) {
-		super(Constants.ATLAS.findRegion("character"));
+	public Enemy(World world, float x, float y, String region) {
+		super(Constants.ATLAS.findRegion(region));
 		this.world = world;
 		this.stateTimer = 0;
 		this.count = 0;
@@ -72,6 +72,12 @@ public abstract class Enemy extends Sprite {
 	protected TextureRegion getFrame(float delta) {
 		TextureRegion region = walk.getKeyFrame(stateTimer, true);
 		
+		flip(region);
+		
+		return region;
+	}
+	
+	protected void flip(TextureRegion region) {
 		if ((body.getLinearVelocity().x < 0 || !walkingRight) && region.isFlipX()) {
 			region.flip(true, false);
 			walkingRight = false;
@@ -79,8 +85,6 @@ public abstract class Enemy extends Sprite {
 			region.flip(true, false);
 			walkingRight = true;
 		}
-		
-		return region;
 	}
 	
 	public void changeDirection() {
@@ -88,17 +92,20 @@ public abstract class Enemy extends Sprite {
 		goingRight = goingRight ? false : true;
 	}
 	
-	protected void checkChange() {		
+	protected Vector2 checkChange() {
+		Vector2 force = new Vector2();
 		if(++count % 150 == 0)
 			changeDirection();
 		
 		if (goingRight) {
-			if (body.getLinearVelocity().x <= 0.5) 
-				body.applyLinearImpulse(new Vector2(0.05f, 0), body.getWorldCenter(), true);
+			if (body.getLinearVelocity().x <= 0.5)
+				force.x = 0.05f;
 		} else {
 			if (body.getLinearVelocity().x >= -0.5)
-				body.applyLinearImpulse(new Vector2(-0.05f, 0), body.getWorldCenter(), true);
+				force.x = -0.05f;
 		}
+		
+		return force;
 	}
 	
 	public void decrementHealth(float delta) {
@@ -113,10 +120,8 @@ public abstract class Enemy extends Sprite {
 	}
 	
 	public void draw(SpriteBatch batch) {
-		if(!isDead) {
-			super.draw(batch);
-			batch.draw(healthBar, body.getPosition().x - .11f,  body.getPosition().y + .14f, healthBarSize * health, .04f);
-		}
+		super.draw(batch);
+		batch.draw(healthBar, body.getPosition().x - .11f,  body.getPosition().y + .14f, healthBarSize * health, .04f);
 		
 		for (Bullet b : bullets)
 			b.draw(batch);
@@ -126,27 +131,30 @@ public abstract class Enemy extends Sprite {
 		if (!kill) {
 			stateTimer += delta;
 			
+			Vector2 force = new Vector2();
 			if (Math.abs(target.x - body.getPosition().x) < 1.5)
-				seek(target, delta);
+				force = seek(target, delta);
 			else
-				checkChange();
+				force = checkChange();
 			
-		for (Bullet b : bullets) {
-			if (b != null) {
-				if (b.shouldRemove() && !world.isLocked()) {
-					world.destroyBody(b.body);
-					bullets.remove(b);
+			for (Bullet b : bullets) {
+				if (b != null) {
+					if (b.shouldRemove() && !world.isLocked()) {
+						world.destroyBody(b.body);
+						bullets.remove(b);
+					}
+					b.update(delta);
 				}
-				b.update(delta);
 			}
-		}
-			
+				
+			body.applyLinearImpulse(force, body.getWorldCenter(), true);
+
 			setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
 			setRegion(getFrame(delta));
 		}
 	}
 	
-	private void seek(Vector2 target, float delta) {
+	protected Vector2 seek(Vector2 target, float delta) {
 		Vector2 force = AI.seek(body, target);
 		
 		float distance = Float.MAX_VALUE;
@@ -179,11 +187,11 @@ public abstract class Enemy extends Sprite {
 		
 		if (body.getPosition().y - startY < EPSILON)
 			jumped = false;
-		
-		body.applyLinearImpulse(force, body.getWorldCenter(), true);
-		
-		if (Math.abs(target.y - body.getPosition().y) < 1)
+				
+		if (Math.abs(target.y - body.getPosition().y) < 1 && !(this instanceof Boss))
 			shoot(delta);
+		
+		return force;
 	}
 	
 	private void shoot(float delta) {
