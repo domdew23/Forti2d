@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dom.forti2d.items.Gun;
-import com.dom.forti2d.sprites.Player;
 import com.dom.forti2d.tools.BodyBuilder;
 import com.dom.forti2d.tools.Constants;
 
@@ -26,7 +25,7 @@ public class Bullet extends Sprite {
 	
 	protected World world;
 	
-	public Bullet(World world, float x, float y, float width, float height, float speed, Player player, Gun gun) {
+	public Bullet(World world, float x, float y, float width, float height, float speed, boolean runningRight, Gun gun) {
 		super(gun.getBulletTexture());
 		this.world = world;
 		this.x = x;
@@ -37,7 +36,7 @@ public class Bullet extends Sprite {
 		x += .3f;
 		y  -= .02f;
 		
-		if (player.runningRight)
+		if (runningRight)
 			this.dx = Math.abs(MathUtils.sin(30) * speed);
 		else {
 			this.dx = MathUtils.sin(30) * speed;
@@ -48,7 +47,7 @@ public class Bullet extends Sprite {
 		setBounds(getX(), getY(), width / Constants.SCALE, height / Constants.SCALE);
 		setPosition(x, y);
 		
-		this.body = BodyBuilder.makeBullet(world, x * Constants.SCALE, y * Constants.SCALE, width, height, cBits, mBits, this, player.runningRight);	
+		this.body = BodyBuilder.makeBullet(world, x * Constants.SCALE, y * Constants.SCALE, width, height, cBits, mBits, this, runningRight);	
 		this.body.setGravityScale(.005f);
 		this.body.setLinearVelocity(dx, 0);
 	}

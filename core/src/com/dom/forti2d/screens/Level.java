@@ -37,6 +37,7 @@ import com.dom.forti2d.sprites.Enemy;
 import com.dom.forti2d.sprites.Grunt;
 import com.dom.forti2d.sprites.Player;
 import com.dom.forti2d.tools.Constants;
+import com.dom.forti2d.tools.EnemySpawner;
 import com.dom.forti2d.tools.ItemSpawner;
 
 public abstract class Level implements Screen {
@@ -66,7 +67,8 @@ public abstract class Level implements Screen {
 		this.mapName = mapName;
 		this.hud = new ArrayList<HUDObject>();
 		this.enemies = new CopyOnWriteArrayList<Enemy>();
-		this.items = ItemSpawner.spawnItems(world, 500f, 3800f);
+		
+
 		explosions = new CopyOnWriteArrayList<Explosion>();
 		NonInteractive.clearMaps();
 		loadCamera();
@@ -91,9 +93,8 @@ public abstract class Level implements Screen {
 		new Obstacles(map, world);
 		new Doors(map, world);
 		
-		//enemies.add(new BlueElite(world, 306f, 32f));
-		//enemies.add(new RedElite(world, 356f, 32f));
-		enemies.add(new Grunt(world, 206f, 32f));
+		items = ItemSpawner.spawnItems(world, 500f, 3800f);
+		enemies = EnemySpawner.spawnEnemies(world, 500f, 3800f);
 		
 		hud.add(new SlotsDisplay());
 		hud.add(new AmmoDisplay());

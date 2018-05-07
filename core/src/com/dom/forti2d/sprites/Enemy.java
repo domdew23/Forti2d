@@ -1,6 +1,7 @@
 package com.dom.forti2d.sprites;
 
 import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -11,6 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.dom.forti2d.bullets.Bullet;
+import com.dom.forti2d.bullets.PistolBullet;
+import com.dom.forti2d.items.Pistol;
 import com.dom.forti2d.objects.NonInteractive;
 import com.dom.forti2d.objects.Platforms;
 import com.dom.forti2d.tools.AI;
@@ -38,9 +41,13 @@ public abstract class Enemy extends Sprite {
 	private boolean jumped;
 	private float startY;
 	private final float EPSILON = .02f;
+	private CopyOnWriteArrayList<Bullet> bullets;
+	private World world;
+	private int shotCoolDown;
 	
 	public Enemy(World world, float x, float y) {
 		super(Constants.ATLAS.findRegion("character"));
+		this.world = world;
 		this.stateTimer = 0;
 		this.count = 0;
 		this.goingRight = true;
@@ -52,6 +59,8 @@ public abstract class Enemy extends Sprite {
 		this.maxForce = .05f;
 		this.velocity = new Vector2(0, 0);
 		this.jumped = false;
+		this.bullets = new CopyOnWriteArrayList<Bullet>();
+		this.shotCoolDown = 0;
 		
 		setBounds(getX(), getY(), 26 / Constants.SCALE, 23 / Constants.SCALE);
 		setPosition(x, y);
@@ -108,25 +117,36 @@ public abstract class Enemy extends Sprite {
 			super.draw(batch);
 			batch.draw(healthBar, body.getPosition().x - .11f,  body.getPosition().y + .14f, healthBarSize * health, .04f);
 		}
+		
+		for (Bullet b : bullets)
+			b.draw(batch);
 	}
 	
 	public void update(float delta, Vector2 target) {
 		if (!kill) {
 			stateTimer += delta;
 			
-			System.out.println(target.x - body.getPosition().x);
-
 			if (Math.abs(target.x - body.getPosition().x) < 1.5)
-				seek(target);
+				seek(target, delta);
 			else
 				checkChange();
+			
+		for (Bullet b : bullets) {
+			if (b != null) {
+				if (b.shouldRemove() && !world.isLocked()) {
+					world.destroyBody(b.body);
+					bullets.remove(b);
+				}
+				b.update(delta);
+			}
+		}
 			
 			setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
 			setRegion(getFrame(delta));
 		}
 	}
 	
-	private void seek(Vector2 target) {
+	private void seek(Vector2 target, float delta) {
 		Vector2 force = AI.seek(body, target);
 		
 		float distance = Float.MAX_VALUE;
@@ -161,8 +181,15 @@ public abstract class Enemy extends Sprite {
 			jumped = false;
 		
 		body.applyLinearImpulse(force, body.getWorldCenter(), true);
+		
+		if (Math.abs(target.y - body.getPosition().y) < 1)
+			shoot(delta);
 	}
 	
+	private void shoot(float delta) {
+		if (shotCoolDown++ % 100 == 0)
+			bullets.add(new PistolBullet(world, ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 6, 2, 5, walkingRight, new Pistol(world, getX(), getY(), 2, "Pistol")));
+	}
 	public void gotShot(Bullet bullet) {
 		decrementHealth(bullet.getGun().getDamage());
 	}

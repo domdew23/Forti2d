@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.dom.forti2d.sprites.Enemy;
 
 public class BodyBuilder {
 	
@@ -89,6 +90,9 @@ public class BodyBuilder {
 		fixDef.filter.categoryBits = Constants.PLAYER_BITS;
 		fixDef.filter.maskBits = Constants.NON_INTERACTIVE_BITS | Constants.PLAYER_BITS | Constants.BULLET_BITS;
 		body.createFixture(fixDef).setUserData(userData);
+		
+		if (userData instanceof Enemy)
+			return body;
 		
 		EdgeShape head = new EdgeShape();
 		head.set(new Vector2(-5 / Constants.SCALE, 5 / Constants.SCALE), new Vector2(5 / Constants.SCALE, 5 / Constants.SCALE));

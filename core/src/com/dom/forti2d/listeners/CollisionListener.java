@@ -9,6 +9,7 @@ import com.dom.forti2d.bullets.Bullet;
 import com.dom.forti2d.objects.Doors;
 import com.dom.forti2d.screens.Level1;
 import com.dom.forti2d.sprites.Enemy;
+import com.dom.forti2d.sprites.Player;
 
 public class CollisionListener implements ContactListener{
 
@@ -36,6 +37,7 @@ public class CollisionListener implements ContactListener{
 	private void handleBulletCollision(Fixture a, Fixture b) {
 		Bullet bullet = null;
 		Enemy enemy = null;
+		Player player = null;
 		
 		if (a.getUserData() instanceof Bullet)
 			bullet = (Bullet) a.getUserData();
@@ -47,8 +49,16 @@ public class CollisionListener implements ContactListener{
 		else if (b.getUserData() instanceof Enemy)
 			enemy = (Enemy) b.getUserData();
 		
+		if (a.getUserData() instanceof Player)
+			player = (Player) a.getUserData();
+		else if (b.getUserData() instanceof Player)
+			player = (Player) b.getUserData();	
+		
 		if (enemy != null)
 			enemy.gotShot(bullet);
+		
+		if (player != null)
+			player.gotShot(bullet);
 		
 		bullet.explode();	
 	}

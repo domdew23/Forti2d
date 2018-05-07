@@ -254,8 +254,7 @@ public class Player extends Sprite {
 	}
 	
 	public void createBody(World world, float x, float y) {
-		this.body = BodyBuilder.makeCharacterBody(world, x, y, radius, "sensor");
-		this.body.setUserData(this);
+		this.body = BodyBuilder.makeCharacterBody(world, x, y, radius, this);
 	}
 	
 	private void incrementHealth(float delta) {
@@ -295,25 +294,23 @@ public class Player extends Sprite {
 	
 	public void shoot() {
 		if (pistolEquipped && ammo[0] != 0) {
-			bullets.add(new PistolBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 6, 2, 5, this, (Gun) inventory[currentSlot]));		
+			bullets.add(new PistolBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 6, 2, 5, runningRight, (Gun) inventory[currentSlot]));		
 			ammo[0]--;
 		}
 		else if (rifleEquipped && ammo[1] != 0) {
-			bullets.add(new RifleBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 8, 4, 4, this, (Gun) inventory[currentSlot]));		
+			bullets.add(new RifleBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 8, 4, 4, runningRight, (Gun) inventory[currentSlot]));		
 			ammo[1]--;
 		}
 		else if (rocketLauncherEquipped && ammo[2] != 0) {
-			bullets.add(new RocketBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 16, 6, 3, this, (Gun) inventory[currentSlot]));		
+			bullets.add(new RocketBullet(world,  ((getX() - getWidth() / 2)), ((getY() + getHeight() / 2)), 16, 6, 3, runningRight, (Gun) inventory[currentSlot]));		
 			ammo[2]--;
 		} else if (inventory[currentSlot] instanceof Health && health != 1 && ammo[3] != 0){
 			incrementHealth(.15f);
-			ammo[3]--;
-			if (ammo[3] == 0)
+			if (--ammo[3] == 0)
 				dropItem(inventory[currentSlot], true);
 		} else if (inventory[currentSlot] instanceof Sheild && sheild != 1 && ammo[4] != 0){
 			incrementSheild(.25f);
-			ammo[4]--;
-			if (ammo[4] == 0)
+			if (--ammo[4] == 0)
 				dropItem(inventory[currentSlot], true);
 		}
 	}
@@ -438,6 +435,10 @@ public class Player extends Sprite {
 				return true;
 		}
 		return false;
+	}
+	
+	public void gotShot(Bullet bullet) {
+		decrementHealth(bullet.getGun().getDamage());
 	}
 	
 	public void setWorld(World world) {
