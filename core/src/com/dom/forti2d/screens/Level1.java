@@ -17,7 +17,7 @@ public class Level1 extends Level {
 	
 	public Level1(GameMain game) {
 		super(game, "maps/level1/level1.tmx");
-		this.player = new Player(world);
+		this.player = new Player(world, game);
 		this.player.createBody(world, 256f, 32f);
 		this.lastX = player.body.getPosition().x;
 		this.lastY = player.body.getPosition().y;

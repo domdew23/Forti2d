@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.dom.forti2d.screens.Level1;
+import com.dom.forti2d.screens.SplashScreen;
 
 public class GameMain extends Game {
 	public SpriteBatch batch;
@@ -12,7 +12,7 @@ public class GameMain extends Game {
 	
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new Level1(this));
+		setScreen(new SplashScreen(this));
 	}
 	
 	public void render () {

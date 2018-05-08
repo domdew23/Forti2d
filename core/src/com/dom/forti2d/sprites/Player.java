@@ -2,6 +2,8 @@ package com.dom.forti2d.sprites;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.dom.forti2d.GameMain;
 import com.dom.forti2d.bullets.Bullet;
 import com.dom.forti2d.bullets.PistolBullet;
 import com.dom.forti2d.bullets.RifleBullet;
@@ -23,6 +26,7 @@ import com.dom.forti2d.items.Pistol;
 import com.dom.forti2d.items.Rifle;
 import com.dom.forti2d.items.RocketLauncher;
 import com.dom.forti2d.items.Sheild;
+import com.dom.forti2d.screens.GameOver;
 import com.dom.forti2d.tools.BodyBuilder;
 import com.dom.forti2d.tools.Constants;
 
@@ -91,10 +95,13 @@ public class Player extends Sprite {
 	private int currentSlot;
 
 	private World world;
+
+	private GameMain game;
 	
-	public Player(World world) {
+	public Player(World world, GameMain game) {
 		super(Constants.ATLAS.findRegion("character"));
 		this.world = world;
+		this.game = game;
 		this.currentState = State.IDLE_NO_GUN;
 		this.previousState = State.IDLE_NO_GUN;
 		this.runningRight = true;
@@ -217,6 +224,8 @@ public class Player extends Sprite {
 			case JUMPING_ROCKET_LAUNCHER: 
 				region = jumpingRocketLauncher; 
 				break;
+			case DEAD:
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(game));
 			default: 
 				region = idleNoGun; 
 				break;
@@ -240,6 +249,8 @@ public class Player extends Sprite {
 			 return getJumpingState();
 		else if (body.getLinearVelocity().x != 0)
 			return getRunningState();
+		else if (health == 0)
+			return State.DEAD;
 		else 
 			return getIdleState();
 	}
