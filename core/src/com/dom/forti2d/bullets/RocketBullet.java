@@ -14,6 +14,7 @@ public class RocketBullet extends Bullet {
 		super.update(delta);
 		
 		if (remove)
-			Level.explosions.add(new Explosion(world, getWidth(), getHeight(), body));
+			Level.explosions.add(new Explosion(world, getWidth(), getHeight(), body, false));
+
 	}
 }

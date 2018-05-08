@@ -37,6 +37,7 @@ import com.dom.forti2d.objects.Platforms;
 import com.dom.forti2d.sprites.Boss;
 import com.dom.forti2d.sprites.Enemy;
 import com.dom.forti2d.sprites.Player;
+import com.dom.forti2d.sprites.SuicideBomber;
 import com.dom.forti2d.tools.Constants;
 import com.dom.forti2d.tools.EnemySpawner;
 import com.dom.forti2d.tools.ItemSpawner;
@@ -55,6 +56,8 @@ public abstract class Level implements Screen {
 	private OrthogonalTiledMapRenderer renderer;
 	protected Player player;
 	
+	protected CopyOnWriteArrayList<Player> players;
+	
 	public static float playerX;
 	private OrthographicCamera camera;
 	
@@ -69,6 +72,7 @@ public abstract class Level implements Screen {
 		this.mapName = mapName;
 		this.hud = new ArrayList<HUDObject>();
 		this.enemies = new CopyOnWriteArrayList<Enemy>();
+		this.players = new CopyOnWriteArrayList<Player>();
 		
 		explosions = new CopyOnWriteArrayList<Explosion>();
 		NonInteractive.clearMaps();
@@ -120,6 +124,14 @@ public abstract class Level implements Screen {
 		if (Gdx.input.isKeyJustPressed(Keys.R)) {
 			player.shoot();
 		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.Q)) {
+			for (Player b : players) {
+				SuicideBomber bomber = (SuicideBomber) b;
+				if (bomber != null && Math.abs(player.body.getPosition().x - bomber.body.getPosition().x) < .5 && !bomber.destroyed)
+					bomber.bomb(enemies, world);
+			}
+		}
 	}
 	
 	protected void checkEquipmentChange(float delta) {	
@@ -149,6 +161,12 @@ public abstract class Level implements Screen {
 		if (player.body.getPosition().x > xLowerBound && player.body.getPosition().x < xUpperBound) camera.position.x = player.body.getPosition().x;
 		camera.update();
 		player.update(delta);
+		
+		for (Player p : players) {
+			if (p != null && !p.destroyed)
+				p.update(delta);
+		}
+		
 		playerX = player.body.getPosition().x;
 		
 		if (Gdx.input.isKeyJustPressed(Keys.F)) {
@@ -204,7 +222,7 @@ public abstract class Level implements Screen {
 	
 	private void draw(float delta) {
 		renderer.render();
-		debug.render(world, camera.combined);
+		//debug.render(world, camera.combined);
 		
 		for (HUDObject h : hud)
 			h.draw(delta);
@@ -230,6 +248,11 @@ public abstract class Level implements Screen {
 			e.draw(game.batch);
 		
 		player.draw(game.batch);
+		
+		for (Player p : players) {
+			if (p != null && !p.destroyed)
+				p.draw(game.batch);
+		}
 
 		game.batch.end();
 	}

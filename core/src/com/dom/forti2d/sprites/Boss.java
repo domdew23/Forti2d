@@ -36,7 +36,7 @@ public class Boss extends Enemy {
 
 	public Boss(World world, float x, float y) {
 		super(world, x, y, "firstboss");
-		this.health = 4f;
+		this.health = 6f;
 		this.healthBarSize = .2f / health;
 		this.seeking = false;
 		this.playerInRange = false;

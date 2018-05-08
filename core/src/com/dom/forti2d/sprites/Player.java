@@ -81,7 +81,8 @@ public class Player extends Sprite {
 	public Body body;
 	
 	public boolean runningRight;
-	
+	public boolean destroyed;
+
 	public boolean noGunEquipped;
 	public boolean pistolEquipped;
 	public boolean rifleEquipped;
@@ -487,7 +488,11 @@ public class Player extends Sprite {
 			body.applyLinearImpulse(new Vector2(3f, 2f), body.getWorldCenter(), true);
 		else
 			body.applyLinearImpulse(new Vector2(-3f, 2f), body.getWorldCenter(), true);
-		decrementHealth(.1f);
+		
+		if (enemy instanceof Boss)
+			decrementHealth(.25f);
+		else
+			decrementHealth(.1f);
 	}
 	
 	public void setWorld(World world) {

@@ -32,7 +32,6 @@ public class CollisionListener implements ContactListener{
 		boolean bFinalDoor = b.getUserData() instanceof FinalDoor;
 		
 		if (((aFinalDoor && bSensor) || (bFinalDoor && aSensor))) {
-			System.out.println("here");
 			Level1.changeScreen = true;
 			Level1.finalHouse = true;
 		}

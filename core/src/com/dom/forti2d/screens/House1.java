@@ -15,6 +15,7 @@ public class House1 extends Level {
 		this.level = level;
 		this.player = player;
 		this.player.createBody(world, 62f, 32f);
+		
 		this.xUpperBound = 14.6f;
 		for (HUDObject h : hud)
 			h.setPlayer(player);

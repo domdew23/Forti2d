@@ -5,6 +5,7 @@ import com.dom.forti2d.hud.HUDObject;
 import com.dom.forti2d.objects.Interactive;
 import com.dom.forti2d.objects.NonInteractive;
 import com.dom.forti2d.sprites.Player;
+import com.dom.forti2d.sprites.SuicideBomber;
 
 public class Level1 extends Level {
 	
@@ -17,8 +18,19 @@ public class Level1 extends Level {
 	
 	public Level1(GameMain game) {
 		super(game, "maps/level1/level1.tmx");
+		
 		this.player = new Player(world, game);
 		this.player.createBody(world, 256f, 32f);
+		
+		SuicideBomber bomber = new SuicideBomber(world, game);
+		bomber.createBody(world, 300f, 32f);
+		
+		SuicideBomber bomber2 = new SuicideBomber(world, game);
+		bomber2.createBody(world, 1900f, 32f);
+		
+		players.add(bomber);
+		players.add(bomber2);
+		
 		this.lastX = player.body.getPosition().x;
 		this.lastY = player.body.getPosition().y;
 		this.created = true;
@@ -38,7 +50,8 @@ public class Level1 extends Level {
 			changedScreen = true;
 			lastX = player.body.getPosition().x;
 			lastY = player.body.getPosition().y;
-			world.destroyBody(player.body);
+			if (!world.isLocked())
+				world.destroyBody(player.body);
 			created = false;
 			if (finalHouse)
 				game.setScreen(new FinalHouse(game, this, player));
@@ -53,7 +66,8 @@ public class Level1 extends Level {
 		Interactive.restoreMaps();
 		changeScreen = false;
 		changedScreen = false;
-		if (!created) 
+		if (!created) {
 			this.player.createBody(world, lastX * 100, lastY * 100);
+		}
 	}
 }

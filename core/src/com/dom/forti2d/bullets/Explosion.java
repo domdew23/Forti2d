@@ -19,14 +19,18 @@ public class Explosion extends Sprite {
 	
 	public boolean done;
 	
-	public Explosion(World world, float x, float y, Body bulletBody) {
+	public Explosion(World world, float x, float y, Body bulletBody, boolean bomber) {
 		super(Constants.ATLAS.findRegion("explosion"));
 		this.bulletBody = bulletBody;
 		this.width = 100;
 		this.height = 100;
 		this.stateTimer = 0;
 		
-		setBounds(getX(), getY(), 20 / Constants.SCALE, 20 / Constants.SCALE);
+		if (bomber)
+			setBounds(getX(), getY(), 80 / Constants.SCALE, 80 / Constants.SCALE);
+		else
+			setBounds(getX(), getY(), 20 / Constants.SCALE, 20 / Constants.SCALE);
+
 		setPosition(x, y);
 
 		setAnimation();
